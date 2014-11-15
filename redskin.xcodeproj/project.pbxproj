@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E10E948E1A15FEFE000B69B4 /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E10E948C1A15FEFE000B69B4 /* Utils.cpp */; };
+		E14FBC821A16A4340051D852 /* Response.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E14FBC801A16A4340051D852 /* Response.cpp */; };
+		E1A8CCA71A15588E00108775 /* Request.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1A8CCA51A15588E00108775 /* Request.cpp */; };
 		E1EB57931A14F24B00F71EFD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1EB57921A14F24B00F71EFD /* main.cpp */; };
+		E1EB579B1A14F84900F71EFD /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1EB57991A14F84900F71EFD /* Server.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +27,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E10E948C1A15FEFE000B69B4 /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
+		E10E948D1A15FEFE000B69B4 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		E14FBC801A16A4340051D852 /* Response.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Response.cpp; sourceTree = "<group>"; };
+		E14FBC811A16A4340051D852 /* Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Response.h; sourceTree = "<group>"; };
+		E1A8CCA51A15588E00108775 /* Request.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Request.cpp; sourceTree = "<group>"; };
+		E1A8CCA61A15588E00108775 /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Request.h; sourceTree = "<group>"; };
 		E1EB578F1A14F24B00F71EFD /* redskin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = redskin; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1EB57921A14F24B00F71EFD /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		E1EB57991A14F84900F71EFD /* Server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Server.cpp; sourceTree = "<group>"; };
+		E1EB579A1A14F84900F71EFD /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Server.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +70,14 @@
 			isa = PBXGroup;
 			children = (
 				E1EB57921A14F24B00F71EFD /* main.cpp */,
+				E1EB57991A14F84900F71EFD /* Server.cpp */,
+				E1EB579A1A14F84900F71EFD /* Server.h */,
+				E1A8CCA51A15588E00108775 /* Request.cpp */,
+				E1A8CCA61A15588E00108775 /* Request.h */,
+				E14FBC801A16A4340051D852 /* Response.cpp */,
+				E14FBC811A16A4340051D852 /* Response.h */,
+				E10E948C1A15FEFE000B69B4 /* Utils.cpp */,
+				E10E948D1A15FEFE000B69B4 /* Utils.h */,
 			);
 			path = redskin;
 			sourceTree = "<group>";
@@ -118,7 +138,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1A8CCA71A15588E00108775 /* Request.cpp in Sources */,
+				E14FBC821A16A4340051D852 /* Response.cpp in Sources */,
+				E1EB579B1A14F84900F71EFD /* Server.cpp in Sources */,
 				E1EB57931A14F24B00F71EFD /* main.cpp in Sources */,
+				E10E948E1A15FEFE000B69B4 /* Utils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,6 +256,7 @@
 				E1EB57981A14F24B00F71EFD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
