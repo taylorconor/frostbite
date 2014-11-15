@@ -1,13 +1,13 @@
 //
 //  Response.h
-//  redskin
+//  frostbite
 //
 //  Created by Conor Taylor on 14/11/2014.
 //  Copyright (c) 2014 Frostplant. All rights reserved.
 //
 
-#ifndef __redskin__Response__
-#define __redskin__Response__
+#ifndef __frostbite__Response__
+#define __frostbite__Response__
 
 #include <stdio.h>
 #include <map>
@@ -34,4 +34,4 @@ public:
     Response(Request, int);
 };
 
-#endif /* defined(__redskin__Response__) */
+#endif /* defined(__frostbite__Response__) */

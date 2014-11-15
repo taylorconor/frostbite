@@ -1,13 +1,13 @@
 //
 //  Utils.h
-//  redskin
+//  frostbite
 //
 //  Created by Conor Taylor on 14/11/2014.
 //  Copyright (c) 2014 Frostplant. All rights reserved.
 //
 
-#ifndef __redskin__Utils__
-#define __redskin__Utils__
+#ifndef __frostbite__Utils__
+#define __frostbite__Utils__
 
 #include <iostream>
 #include <string>
@@ -28,4 +28,4 @@ public:
     static std::vector<std::string> explode(std::string const &, char, int);
 };
 
-#endif /* defined(__redskin__Utils__) */
+#endif /* defined(__frostbite__Utils__) */

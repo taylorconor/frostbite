@@ -1,13 +1,13 @@
 //
 //  Server.h
-//  redskin
+//  frostbite
 //
 //  Created by Conor Taylor on 13/11/2014.
 //  Copyright (c) 2014 Frostplant. All rights reserved.
 //
 
-#ifndef __redskin__Server__
-#define __redskin__Server__
+#ifndef __frostbite__Server__
+#define __frostbite__Server__
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,4 +39,4 @@ public:
     Server(int port);
 };
 
-#endif /* defined(__redskin__Server__) */
+#endif /* defined(__frostbite__Server__) */

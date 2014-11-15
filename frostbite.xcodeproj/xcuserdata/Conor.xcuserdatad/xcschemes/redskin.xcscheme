@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E1EB578E1A14F24B00F71EFD"
-               BuildableName = "redskin"
-               BlueprintName = "redskin"
-               ReferencedContainer = "container:redskin.xcodeproj">
+               BuildableName = "frostbite"
+               BlueprintName = "frostbite"
+               ReferencedContainer = "container:frostbite.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1EB578E1A14F24B00F71EFD"
-            BuildableName = "redskin"
-            BlueprintName = "redskin"
-            ReferencedContainer = "container:redskin.xcodeproj">
+            BuildableName = "frostbite"
+            BlueprintName = "frostbite"
+            ReferencedContainer = "container:frostbite.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -52,9 +52,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1EB578E1A14F24B00F71EFD"
-            BuildableName = "redskin"
-            BlueprintName = "redskin"
-            ReferencedContainer = "container:redskin.xcodeproj">
+            BuildableName = "frostbite"
+            BlueprintName = "frostbite"
+            ReferencedContainer = "container:frostbite.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -70,9 +70,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1EB578E1A14F24B00F71EFD"
-            BuildableName = "redskin"
-            BlueprintName = "redskin"
-            ReferencedContainer = "container:redskin.xcodeproj">
+            BuildableName = "frostbite"
+            BlueprintName = "frostbite"
+            ReferencedContainer = "container:frostbite.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -1,13 +1,13 @@
 //
 //  Request.h
-//  redskin
+//  frostbite
 //
 //  Created by Conor Taylor on 13/11/2014.
 //  Copyright (c) 2014 Frostplant. All rights reserved.
 //
 
-#ifndef __redskin__Request__
-#define __redskin__Request__
+#ifndef __frostbite__Request__
+#define __frostbite__Request__
 
 #include <iostream>
 #include <sstream>
@@ -39,4 +39,4 @@ public:
     bool getValidity();
 };
 
-#endif /* defined(__redskin__Request__) */
+#endif /* defined(__frostbite__Request__) */

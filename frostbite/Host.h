@@ -1,13 +1,13 @@
 //
 //  Host.h
-//  redskin
+//  frostbite
 //
 //  Created by Conor Taylor on 15/11/2014.
 //  Copyright (c) 2014 Frostplant. All rights reserved.
 //
 
-#ifndef __redskin__Host__
-#define __redskin__Host__
+#ifndef __frostbite__Host__
+#define __frostbite__Host__
 
 #include <stdio.h>
 #include <string>
@@ -26,4 +26,4 @@ public:
     void handleRequest(Request, int);
 };
 
-#endif /* defined(__redskin__Host__) */
+#endif /* defined(__frostbite__Host__) */

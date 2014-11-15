@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E10E948E1A15FEFE000B69B4 /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E10E948C1A15FEFE000B69B4 /* Utils.cpp */; };
-		E14FBC821A16A4340051D852 /* Response.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E14FBC801A16A4340051D852 /* Response.cpp */; };
-		E1A8CCA71A15588E00108775 /* Request.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1A8CCA51A15588E00108775 /* Request.cpp */; };
-		E1DD31E51A175A0B00CD0512 /* Host.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1DD31E31A175A0B00CD0512 /* Host.cpp */; };
-		E1DD31E81A175AE600CD0512 /* Hostname.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1DD31E61A175AE600CD0512 /* Hostname.cpp */; };
-		E1EB57931A14F24B00F71EFD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1EB57921A14F24B00F71EFD /* main.cpp */; };
-		E1EB579B1A14F84900F71EFD /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1EB57991A14F84900F71EFD /* Server.cpp */; };
+		E1C6CDCD1A1793AD009380EB /* Host.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDC01A1793AD009380EB /* Host.cpp */; };
+		E1C6CDCE1A1793AD009380EB /* Hostname.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDC21A1793AD009380EB /* Hostname.cpp */; };
+		E1C6CDCF1A1793AD009380EB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDC41A1793AD009380EB /* main.cpp */; };
+		E1C6CDD01A1793AD009380EB /* Request.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDC51A1793AD009380EB /* Request.cpp */; };
+		E1C6CDD11A1793AD009380EB /* Response.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDC71A1793AD009380EB /* Response.cpp */; };
+		E1C6CDD21A1793AD009380EB /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDC91A1793AD009380EB /* Server.cpp */; };
+		E1C6CDD31A1793AD009380EB /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDCB1A1793AD009380EB /* Utils.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,20 +29,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E10E948C1A15FEFE000B69B4 /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
-		E10E948D1A15FEFE000B69B4 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
-		E14FBC801A16A4340051D852 /* Response.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Response.cpp; sourceTree = "<group>"; };
-		E14FBC811A16A4340051D852 /* Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Response.h; sourceTree = "<group>"; };
-		E1A8CCA51A15588E00108775 /* Request.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Request.cpp; sourceTree = "<group>"; };
-		E1A8CCA61A15588E00108775 /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Request.h; sourceTree = "<group>"; };
-		E1DD31E31A175A0B00CD0512 /* Host.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Host.cpp; sourceTree = "<group>"; };
-		E1DD31E41A175A0B00CD0512 /* Host.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Host.h; sourceTree = "<group>"; };
-		E1DD31E61A175AE600CD0512 /* Hostname.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hostname.cpp; sourceTree = "<group>"; };
-		E1DD31E71A175AE600CD0512 /* Hostname.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hostname.h; sourceTree = "<group>"; };
-		E1EB578F1A14F24B00F71EFD /* redskin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = redskin; sourceTree = BUILT_PRODUCTS_DIR; };
-		E1EB57921A14F24B00F71EFD /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		E1EB57991A14F84900F71EFD /* Server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Server.cpp; sourceTree = "<group>"; };
-		E1EB579A1A14F84900F71EFD /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Server.h; sourceTree = "<group>"; };
+		E1C6CDC01A1793AD009380EB /* Host.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Host.cpp; path = frostbite/Host.cpp; sourceTree = SOURCE_ROOT; };
+		E1C6CDC11A1793AD009380EB /* Host.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Host.h; path = frostbite/Host.h; sourceTree = SOURCE_ROOT; };
+		E1C6CDC21A1793AD009380EB /* Hostname.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Hostname.cpp; path = frostbite/Hostname.cpp; sourceTree = SOURCE_ROOT; };
+		E1C6CDC31A1793AD009380EB /* Hostname.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hostname.h; path = frostbite/Hostname.h; sourceTree = SOURCE_ROOT; };
+		E1C6CDC41A1793AD009380EB /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = frostbite/main.cpp; sourceTree = SOURCE_ROOT; };
+		E1C6CDC51A1793AD009380EB /* Request.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Request.cpp; path = frostbite/Request.cpp; sourceTree = SOURCE_ROOT; };
+		E1C6CDC61A1793AD009380EB /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Request.h; path = frostbite/Request.h; sourceTree = SOURCE_ROOT; };
+		E1C6CDC71A1793AD009380EB /* Response.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Response.cpp; path = frostbite/Response.cpp; sourceTree = SOURCE_ROOT; };
+		E1C6CDC81A1793AD009380EB /* Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Response.h; path = frostbite/Response.h; sourceTree = SOURCE_ROOT; };
+		E1C6CDC91A1793AD009380EB /* Server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Server.cpp; path = frostbite/Server.cpp; sourceTree = SOURCE_ROOT; };
+		E1C6CDCA1A1793AD009380EB /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Server.h; path = frostbite/Server.h; sourceTree = SOURCE_ROOT; };
+		E1C6CDCB1A1793AD009380EB /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utils.cpp; path = frostbite/Utils.cpp; sourceTree = SOURCE_ROOT; };
+		E1C6CDCC1A1793AD009380EB /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = frostbite/Utils.h; sourceTree = SOURCE_ROOT; };
+		E1EB578F1A14F24B00F71EFD /* frostbite */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = frostbite; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +67,7 @@
 		E1EB57901A14F24B00F71EFD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1EB578F1A14F24B00F71EFD /* redskin */,
+				E1EB578F1A14F24B00F71EFD /* frostbite */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -75,19 +75,19 @@
 		E1EB57911A14F24B00F71EFD /* redskin */ = {
 			isa = PBXGroup;
 			children = (
-				E1EB57921A14F24B00F71EFD /* main.cpp */,
-				E1EB57991A14F84900F71EFD /* Server.cpp */,
-				E1EB579A1A14F84900F71EFD /* Server.h */,
-				E1DD31E31A175A0B00CD0512 /* Host.cpp */,
-				E1DD31E41A175A0B00CD0512 /* Host.h */,
-				E1DD31E61A175AE600CD0512 /* Hostname.cpp */,
-				E1DD31E71A175AE600CD0512 /* Hostname.h */,
-				E1A8CCA51A15588E00108775 /* Request.cpp */,
-				E1A8CCA61A15588E00108775 /* Request.h */,
-				E14FBC801A16A4340051D852 /* Response.cpp */,
-				E14FBC811A16A4340051D852 /* Response.h */,
-				E10E948C1A15FEFE000B69B4 /* Utils.cpp */,
-				E10E948D1A15FEFE000B69B4 /* Utils.h */,
+				E1C6CDC41A1793AD009380EB /* main.cpp */,
+				E1C6CDC01A1793AD009380EB /* Host.cpp */,
+				E1C6CDC11A1793AD009380EB /* Host.h */,
+				E1C6CDC21A1793AD009380EB /* Hostname.cpp */,
+				E1C6CDC31A1793AD009380EB /* Hostname.h */,
+				E1C6CDC51A1793AD009380EB /* Request.cpp */,
+				E1C6CDC61A1793AD009380EB /* Request.h */,
+				E1C6CDC71A1793AD009380EB /* Response.cpp */,
+				E1C6CDC81A1793AD009380EB /* Response.h */,
+				E1C6CDC91A1793AD009380EB /* Server.cpp */,
+				E1C6CDCA1A1793AD009380EB /* Server.h */,
+				E1C6CDCB1A1793AD009380EB /* Utils.cpp */,
+				E1C6CDCC1A1793AD009380EB /* Utils.h */,
 			);
 			path = redskin;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E1EB578E1A14F24B00F71EFD /* redskin */ = {
+		E1EB578E1A14F24B00F71EFD /* frostbite */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E1EB57961A14F24B00F71EFD /* Build configuration list for PBXNativeTarget "redskin" */;
+			buildConfigurationList = E1EB57961A14F24B00F71EFD /* Build configuration list for PBXNativeTarget "frostbite" */;
 			buildPhases = (
 				E1EB578B1A14F24B00F71EFD /* Sources */,
 				E1EB578C1A14F24B00F71EFD /* Frameworks */,
@@ -107,9 +107,9 @@
 			);
 			dependencies = (
 			);
-			name = redskin;
+			name = frostbite;
 			productName = redskin;
-			productReference = E1EB578F1A14F24B00F71EFD /* redskin */;
+			productReference = E1EB578F1A14F24B00F71EFD /* frostbite */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -126,7 +126,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E1EB578A1A14F24B00F71EFD /* Build configuration list for PBXProject "redskin" */;
+			buildConfigurationList = E1EB578A1A14F24B00F71EFD /* Build configuration list for PBXProject "frostbite" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -138,7 +138,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E1EB578E1A14F24B00F71EFD /* redskin */,
+				E1EB578E1A14F24B00F71EFD /* frostbite */,
 			);
 		};
 /* End PBXProject section */
@@ -148,13 +148,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1A8CCA71A15588E00108775 /* Request.cpp in Sources */,
-				E14FBC821A16A4340051D852 /* Response.cpp in Sources */,
-				E1EB579B1A14F84900F71EFD /* Server.cpp in Sources */,
-				E1DD31E51A175A0B00CD0512 /* Host.cpp in Sources */,
-				E1EB57931A14F24B00F71EFD /* main.cpp in Sources */,
-				E10E948E1A15FEFE000B69B4 /* Utils.cpp in Sources */,
-				E1DD31E81A175AE600CD0512 /* Hostname.cpp in Sources */,
+				E1C6CDCE1A1793AD009380EB /* Hostname.cpp in Sources */,
+				E1C6CDD01A1793AD009380EB /* Request.cpp in Sources */,
+				E1C6CDD21A1793AD009380EB /* Server.cpp in Sources */,
+				E1C6CDD31A1793AD009380EB /* Utils.cpp in Sources */,
+				E1C6CDD11A1793AD009380EB /* Response.cpp in Sources */,
+				E1C6CDCF1A1793AD009380EB /* main.cpp in Sources */,
+				E1C6CDCD1A1793AD009380EB /* Host.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,21 +238,21 @@
 		E1EB57971A14F24B00F71EFD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = frostbite;
 			};
 			name = Debug;
 		};
 		E1EB57981A14F24B00F71EFD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = frostbite;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E1EB578A1A14F24B00F71EFD /* Build configuration list for PBXProject "redskin" */ = {
+		E1EB578A1A14F24B00F71EFD /* Build configuration list for PBXProject "frostbite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E1EB57941A14F24B00F71EFD /* Debug */,
@@ -261,7 +261,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E1EB57961A14F24B00F71EFD /* Build configuration list for PBXNativeTarget "redskin" */ = {
+		E1EB57961A14F24B00F71EFD /* Build configuration list for PBXNativeTarget "frostbite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E1EB57971A14F24B00F71EFD /* Debug */,

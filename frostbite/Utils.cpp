@@ -1,6 +1,6 @@
 //
 //  Utils.cpp
-//  redskin
+//  frostbite
 //
 //  Created by Conor Taylor on 14/11/2014.
 //  Copyright (c) 2014 Frostplant. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  Response.cpp
-//  redskin
+//  frostbite
 //
 //  Created by Conor Taylor on 14/11/2014.
 //  Copyright (c) 2014 Frostplant. All rights reserved.
@@ -9,7 +9,7 @@
 #include "Response.h"
 
 void Response::processGetRequest() {
-    string uri = "/Users/Conor/Documents/Projects/redskin/srv"
+    string uri = "/Users/Conor/Documents/Projects/frostbite/srv"
         +this->req.getRequestURI();
     if (uri.back() == '/')
         uri += "index.html";
