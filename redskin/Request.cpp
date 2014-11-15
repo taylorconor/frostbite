@@ -45,15 +45,18 @@ int Request::parse() {
     return 1;
 }
 
+void Request::printStatus() {
+    if (this->parseStatus < 0)
+        cout << "ERR" << "\t" << getRequestMethod() << "\t"
+            << getRequestURI() << "\tFILE_NOT_FOUND" << endl;
+    else
+        cout << "OK" << "\t" << getRequestMethod() << "\t"
+            << getRequestURI() << endl;
+}
+
 Request::Request(string r) {
     this->source = r;
-    int succ = parse();
-    if (succ < 0)
-        cout << "ERR";
-    else
-        cout << "OK";
-    
-    cout << "\t" << getRequestMethod() << "\t" << getRequestURI() << endl;
+    this->parseStatus = parse();
 }
 
 string Request::getRequestMethod() {
@@ -66,4 +69,8 @@ string Request::getRequestURI() {
 
 string Request::getRequestHTTP() {
     return header["request-http"];
+}
+
+bool Request::getValidity() {
+    return (this->parseStatus >= 0);
 }

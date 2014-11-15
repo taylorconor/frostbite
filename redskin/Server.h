@@ -11,13 +11,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <string>
+#include <vector>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include "Host.h"
+#include "Hostname.h"
 #include "Request.h"
 #include "Response.h"
 #include "Utils.h"
@@ -27,9 +29,11 @@
 class Server {
 private:
     int port;
+    std::vector<Host> hosts;
     
     void initServer();
     void initListen(int);
+    void dispatch(Request, int);
 public:
     
     Server(int port);

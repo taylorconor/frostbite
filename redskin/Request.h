@@ -26,14 +26,17 @@ class Request {
 private:
     map<string,string> header;
     string source;
+    int parseStatus;
     
     int parse();
 public:
     Request(string);
+    void printStatus();
     
     string getRequestMethod();
     string getRequestURI();
     string getRequestHTTP();
+    bool getValidity();
 };
 
 #endif /* defined(__redskin__Request__) */

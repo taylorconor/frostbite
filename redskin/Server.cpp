@@ -8,6 +8,17 @@
 
 #include "Server.h"
 
+// dispatch the request to the correct host for handling
+void Server::dispatch(Request req, int newsockfd) {
+    std::string reqURI = req.getRequestURI();
+    for (int i = 0; i < hosts.size(); i++) {
+        Hostname h = hosts[i].getHostname();
+        if (h.contains(reqURI)) {
+            hosts[i].handleRequest(req, newsockfd);
+        }
+    }
+}
+
 void Server::initListen(int sockfd) {
     int newsockfd, n;
     char buffer[RECBUF];
@@ -28,8 +39,10 @@ void Server::initListen(int sockfd) {
         else if (n == RECBUF-1)
             printf("\n\n\nBUFFER OVERFLOW\n\n\n");
         
+        // only dispatch the request if it contains a valid header
+        // TODO: allow separate errors for file not found and invalid header
         Request req = Request(string(buffer));
-        Response res = Response(req, newsockfd);
+        dispatch(req, newsockfd);
         
         close(newsockfd);
     }
@@ -54,6 +67,12 @@ void Server::initServer() {
     // try to bind to the port
     if (::bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         Utils::error("ERROR on binding");
+    
+    // initialise server hosts
+    // TODO: read hosts from config file
+    std::vector<std::string> h { "localhost" };
+    Hostname hs = Hostname(h);
+    hosts.push_back(Host(hs));
     
     // begin server listening
     initListen(sockfd);
