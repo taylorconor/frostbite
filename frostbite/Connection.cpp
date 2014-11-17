@@ -20,22 +20,16 @@ std::string Connection::getAbsoluteURI() {
     return uri;
 }
 
-bool Connection::fileExists(std::string uri) {
-    ifstream file;
-    file.open(uri);
-    if (!file)
-        return 0;
-    file.close();
-    return 1;
-}
-
 // TODO: replace err with the HTTP status code
-void Connection::printStatus(bool err) {
-    if (err)
+void Connection::printStatus() {
+    int code = this->res.getCode();
+    
+    if (code > 400)
         cout << "ERR" << "\t";
     else
         cout << "OK" << "\t";
     
+    cout << code << "\t";
     cout << this->req.getRequestMethod() << "\t";
     cout << this->req.getRequestURI() << "\t";
     cout << endl;
@@ -45,16 +39,11 @@ void Connection::handleConnection() {
     std::string uri = getAbsoluteURI();
     std::string method = this->req.getRequestMethod();
     
-    if (!fileExists(uri)) {
-        printStatus(true);
-        return;
-    }
-    
     // TODO: implement other HTTP methods
     if (method == "GET")
         this->res = Response(uri, this->sockfd);
     
-    printStatus(false);
+    printStatus();
 }
 
 Connection::Connection() {}

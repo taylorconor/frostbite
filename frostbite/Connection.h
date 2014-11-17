@@ -17,8 +17,7 @@
 class Connection {
 private:
     std::string getAbsoluteURI();
-    bool fileExists(std::string uri);
-    void printStatus(bool);
+    void printStatus();
     
     Request req;
     Response res;
