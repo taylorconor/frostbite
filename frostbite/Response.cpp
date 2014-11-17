@@ -8,34 +8,29 @@
 
 #include "Response.h"
 
-void Response::processGetRequest() {
-    string uri = "/Users/Conor/Documents/Projects/frostbite/srv"
-        +this->req.getRequestURI();
-    if (uri.back() == '/')
-        uri += "index.html";
-    
+void Response::writeFile() {
     ifstream file;
-    file.open(uri.c_str());
+    file.open(uri);
     if (!file) {
         cout << "Error: Can't open file " << uri << endl;
     }
     else {
-        string dat, accum;
+        char *buf = new char[1024];
+        
         while (file) {
-            file >> accum;
-            dat += ' '+accum;
+            file.read(buf, 1024);
+            int n = write(this->sockfd, buf, 1024);
+            if (n < 0)
+                Utils::error("ERROR writing to socket");
         }
-        int n = write(this->sockfd, dat.c_str(), strlen(dat.c_str()));
-        if (n < 0)
-            Utils::error("ERROR writing to socket");
+        delete[] buf;
     }
+    file.close();
 }
 
-Response::Response(Request req, int sockfd) : req(req) {
+Response::Response() {}
+Response::Response(std::string uri, int sockfd) {
+    this->uri = uri;
     this->sockfd = sockfd;
-    
-    string method = this->req.getRequestMethod();
-    if (method == "GET") {
-        processGetRequest();
-    }
+    writeFile();
 }

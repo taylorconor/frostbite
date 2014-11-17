@@ -24,19 +24,20 @@ using namespace std;
 
 class Request {
 private:
-    map<string,string> header;
-    string source;
+    int parse();
+    
+    map<std::string,std::string> header;
+    std::string source;
     int parseStatus;
     
-    int parse();
 public:
-    Request(string);
-    void printStatus();
+    Request();
+    Request(std::string);
     
-    string getRequestMethod();
-    string getRequestURI();
-    string getRequestHTTP();
-    bool getValidity();
+    std::string getRequestMethod();
+    std::string getRequestURI();
+    std::string getRequestHTTP();
+    bool isValid();
 };
 
 #endif /* defined(__frostbite__Request__) */

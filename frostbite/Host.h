@@ -11,19 +11,25 @@
 
 #include <stdio.h>
 #include <string>
+#include <vector>
 
 #include "Hostname.h"
 #include "Request.h"
 #include "Response.h"
+#include "Connection.h"
 #include "Utils.h"
 
 class Host {
 private:
     Hostname hostname;
+    std::vector<Connection> pool;
 public:
+    Host();
     Host(Hostname);
-    Hostname getHostname();
+    
     void handleRequest(Request, int);
+
+    Hostname getHostname();
 };
 
 #endif /* defined(__frostbite__Host__) */

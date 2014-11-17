@@ -17,6 +17,7 @@ bool Hostname::contains(std::string test) {
     return true;
 }
 
+Hostname::Hostname() {}
 Hostname::Hostname(std::vector<std::string> hostnames) {
     this->hostnames = hostnames;
 }

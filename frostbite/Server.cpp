@@ -39,8 +39,6 @@ void Server::initListen(int sockfd) {
         else if (n == RECBUF-1)
             printf("\n\n\nBUFFER OVERFLOW\n\n\n");
         
-        // only dispatch the request if it contains a valid header
-        // TODO: allow separate errors for file not found and invalid header
         Request req = Request(string(buffer));
         dispatch(req, newsockfd);
         
@@ -81,6 +79,7 @@ void Server::initServer() {
     close(sockfd);
 }
 
+Server::Server() {}
 Server::Server(int port) {
     this->port = port;
     initServer();

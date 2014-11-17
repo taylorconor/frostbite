@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E147AA2A1A17F347006928D8 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E147AA281A17F347006928D8 /* Connection.cpp */; };
 		E1C6CDCD1A1793AD009380EB /* Host.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDC01A1793AD009380EB /* Host.cpp */; };
 		E1C6CDCE1A1793AD009380EB /* Hostname.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDC21A1793AD009380EB /* Hostname.cpp */; };
 		E1C6CDCF1A1793AD009380EB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1C6CDC41A1793AD009380EB /* main.cpp */; };
@@ -29,6 +30,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E147AA281A17F347006928D8 /* Connection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connection.cpp; sourceTree = "<group>"; };
+		E147AA291A17F347006928D8 /* Connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connection.h; sourceTree = "<group>"; };
 		E1C6CDC01A1793AD009380EB /* Host.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Host.cpp; path = frostbite/Host.cpp; sourceTree = SOURCE_ROOT; };
 		E1C6CDC11A1793AD009380EB /* Host.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Host.h; path = frostbite/Host.h; sourceTree = SOURCE_ROOT; };
 		E1C6CDC21A1793AD009380EB /* Hostname.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Hostname.cpp; path = frostbite/Hostname.cpp; sourceTree = SOURCE_ROOT; };
@@ -59,7 +62,7 @@
 		E1EB57861A14F24B00F71EFD = {
 			isa = PBXGroup;
 			children = (
-				E1EB57911A14F24B00F71EFD /* redskin */,
+				E1EB57911A14F24B00F71EFD /* frostbite */,
 				E1EB57901A14F24B00F71EFD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -72,24 +75,26 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E1EB57911A14F24B00F71EFD /* redskin */ = {
+		E1EB57911A14F24B00F71EFD /* frostbite */ = {
 			isa = PBXGroup;
 			children = (
 				E1C6CDC41A1793AD009380EB /* main.cpp */,
+				E1C6CDC91A1793AD009380EB /* Server.cpp */,
+				E1C6CDCA1A1793AD009380EB /* Server.h */,
 				E1C6CDC01A1793AD009380EB /* Host.cpp */,
 				E1C6CDC11A1793AD009380EB /* Host.h */,
 				E1C6CDC21A1793AD009380EB /* Hostname.cpp */,
 				E1C6CDC31A1793AD009380EB /* Hostname.h */,
+				E147AA281A17F347006928D8 /* Connection.cpp */,
+				E147AA291A17F347006928D8 /* Connection.h */,
 				E1C6CDC51A1793AD009380EB /* Request.cpp */,
 				E1C6CDC61A1793AD009380EB /* Request.h */,
 				E1C6CDC71A1793AD009380EB /* Response.cpp */,
 				E1C6CDC81A1793AD009380EB /* Response.h */,
-				E1C6CDC91A1793AD009380EB /* Server.cpp */,
-				E1C6CDCA1A1793AD009380EB /* Server.h */,
 				E1C6CDCB1A1793AD009380EB /* Utils.cpp */,
 				E1C6CDCC1A1793AD009380EB /* Utils.h */,
 			);
-			path = redskin;
+			path = frostbite;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -108,7 +113,7 @@
 			dependencies = (
 			);
 			name = frostbite;
-			productName = redskin;
+			productName = frostbite;
 			productReference = E1EB578F1A14F24B00F71EFD /* frostbite */;
 			productType = "com.apple.product-type.tool";
 		};
@@ -155,6 +160,7 @@
 				E1C6CDD11A1793AD009380EB /* Response.cpp in Sources */,
 				E1C6CDCF1A1793AD009380EB /* main.cpp in Sources */,
 				E1C6CDCD1A1793AD009380EB /* Host.cpp in Sources */,
+				E147AA2A1A17F347006928D8 /* Connection.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

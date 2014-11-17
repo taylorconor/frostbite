@@ -16,12 +16,19 @@
 
 class Connection {
 private:
+    std::string getAbsoluteURI();
+    bool fileExists(std::string uri);
+    void printStatus(bool);
+    
     Request req;
     Response res;
     int sockfd;
     
 public:
-    Connection(int);
+    Connection();
+    Connection(Request, int);
+    
+    void handleConnection();
 };
 
 #endif /* defined(__frostbite__Connection__) */

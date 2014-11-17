@@ -28,14 +28,15 @@
 
 class Server {
 private:
-    int port;
-    std::vector<Host> hosts;
-    
     void initServer();
     void initListen(int);
     void dispatch(Request, int);
-public:
     
+    int port;
+    std::vector<Host> hosts;
+    
+public:
+    Server();
     Server(int port);
 };
 

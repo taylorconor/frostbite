@@ -24,14 +24,16 @@
 
 class Response {
 private:
+    void writeFile();
+    
     Request req;
-    int sockfd;
-    
     std::map<std::string,std::string> header;
-    
-    void processGetRequest();
+    int sockfd;
+    std::string uri;
+
 public:
-    Response(Request, int);
+    Response();
+    Response(std::string, int);
 };
 
 #endif /* defined(__frostbite__Response__) */

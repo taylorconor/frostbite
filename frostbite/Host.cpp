@@ -9,14 +9,16 @@
 #include "Host.h"
 
 void Host::handleRequest(Request req, int sockfd) {
-    req.printStatus();
-    // only create response if valid request
-    if (req.getValidity())
-        Response res = Response(req, sockfd);
+    Connection c = Connection(req, sockfd);
+    
+    // TODO: implement connection pooling
+    //this->pool.push_back(c);
+    c.handleConnection();
 }
 
-Host::Host(Hostname hostname) : hostname(hostname) {
-
+Host::Host() {}
+Host::Host(Hostname hostname) {
+    this->hostname = hostname;
 }
 
 Hostname Host::getHostname() {

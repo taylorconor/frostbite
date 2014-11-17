@@ -17,7 +17,9 @@ class Hostname {
 private:
     std::vector<std::string> hostnames;
 public:
+    Hostname();
     Hostname(std::vector<std::string>);
+    
     bool contains(std::string);
 };
 
