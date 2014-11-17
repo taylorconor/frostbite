@@ -1,0 +1,3 @@
+language: c++
+xcode_project: frostbite.xcodeproj # path to your xcodeproj folder
+xcode_scheme: frostbite
