@@ -20,7 +20,6 @@ std::string Connection::getAbsoluteURI() {
     return uri;
 }
 
-// TODO: replace err with the HTTP status code
 void Connection::printStatus() {
     int code = this->res.getCode();
     

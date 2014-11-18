@@ -21,16 +21,24 @@
 #include <netinet/in.h>
 
 #include "Request.h"
+#include "Utils.h"
 
-#define HTTP_200_OK             200
-#define HTTP_400_BAD_REQUEST    400
-#define HTTP_404_NOT_FOUND      404
-#define HTTP_500_INTERNAL_ERR   500
-#define HTTP_550_NO_PERMISSION  550
+#define HTTP_200_OK                 200
+#define HTTP_400_BAD_REQUEST        400
+#define HTTP_404_NOT_FOUND          404
+#define HTTP_500_INTERNAL_ERR       500
+#define HTTP_550_NO_PERMISSION      550
+
+#define HTTP_200_OK_STR             "OK"
+#define HTTP_400_BAD_REQUEST_STR    "Bad Request"
+#define HTTP_404_NOT_FOUND_STR      "Not Found"
+#define HTTP_500_INTERNAL_ERR_STR   "Internal Server Error"
+#define HTTP_550_NO_PERMISSION_STR  "No Permission"
 
 class Response {
 private:
     int writeFile();
+    std::string getTitle(int);
     
     Request req;
     std::map<std::string,std::string> header;
