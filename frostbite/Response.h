@@ -48,8 +48,11 @@ private:
 
 public:
     Response();
+    Response(int);
     Response(std::string, int);
     int getCode();
+    void send();
+    void send(int);
 };
 
 #endif /* defined(__frostbite__Response__) */

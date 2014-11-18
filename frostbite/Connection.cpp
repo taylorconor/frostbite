@@ -35,12 +35,18 @@ void Connection::printStatus() {
 }
 
 void Connection::handleConnection() {
+    if (!this->req.isValid()) {
+        this->res = Response(this->sockfd);
+        this->res.send(HTTP_500_INTERNAL_ERR);
+    }
     std::string uri = getAbsoluteURI();
     std::string method = this->req.getRequestMethod();
     
     // TODO: implement other HTTP methods
-    if (method == "GET")
+    if (method == "GET") {
         this->res = Response(uri, this->sockfd);
+        this->res.send();
+    }
     
     printStatus();
 }

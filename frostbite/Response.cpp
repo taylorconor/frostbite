@@ -14,6 +14,10 @@
                             return HTTP_500_INTERNAL_ERR; }
 
 int Response::writeFile() {
+    // uri doesn't *have* to be defined, but if it isn't there's a big problem
+    if (this->uri.empty())
+        return HTTP_500_INTERNAL_ERR;
+    
     ifstream file;
     file.open(uri);
     if (!file) {
@@ -54,7 +58,44 @@ std::string Response::getTitle(int code) {
     }
 }
 
+void Response::send() {
+    // complete the response and get the response code
+    this->code = writeFile();
+    
+    if (this->code != HTTP_200_OK) {
+        std::string s = "HTTP/1.1 " + to_string(this->code) + " " +
+        getTitle(this->code) + "\n";
+        write(this->sockfd, s.c_str(), strlen(s.c_str()));
+        std::string h = Utils::dump_map(this->header);
+        write(this->sockfd, h.c_str(), strlen(h.c_str()));
+    }
+}
+
+void Response::send(int code) {
+    // force response for the user-specified code
+    this->code = code;
+    
+    if (this->code == HTTP_200_OK) {
+        // try to send normally
+        send();
+    }
+    else {
+        std::string s = "HTTP/1.1 " + to_string(this->code) + " " +
+        getTitle(this->code) + "\n";
+        write(this->sockfd, s.c_str(), strlen(s.c_str()));
+        std::string h = Utils::dump_map(this->header);
+        write(this->sockfd, h.c_str(), strlen(h.c_str()));
+    }
+}
+
 Response::Response() {}
+Response::Response(int sockfd) {
+    this->sockfd = sockfd;
+    
+    header["Server"] = "frostbite";
+    header["Accept-Ranges"] = "bytes";
+    header["Connection"] = "Keep-Alive";
+}
 Response::Response(std::string uri, int sockfd) {
     this->uri = uri;
     this->sockfd = sockfd;
@@ -62,17 +103,6 @@ Response::Response(std::string uri, int sockfd) {
     header["Server"] = "frostbite";
     header["Accept-Ranges"] = "bytes";
     header["Connection"] = "Keep-Alive";
-    
-    // complete the response and get the response code
-    this->code = writeFile();
-    
-    if (this->code != HTTP_200_OK) {
-        std::string s = "HTTP/1.1 " + to_string(this->code) + " " +
-            getTitle(this->code) + "\n";
-        write(this->sockfd, s.c_str(), strlen(s.c_str()));
-        std::string h = Utils::dump_map(this->header);
-        write(this->sockfd, h.c_str(), strlen(h.c_str()));
-    }
 }
 
 int Response::getCode() {
