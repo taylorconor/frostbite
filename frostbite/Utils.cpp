@@ -13,11 +13,13 @@ void Utils::error(const char *msg) {
     exit(1);
 }
 
-void Utils::dump_map(const std::map<std::string, std::string>& map) {
+std::string Utils::dump_map(const std::map<std::string, std::string>& map) {
+    std::string ret;
     for (std::map<std::string,std::string>::const_iterator it = map.begin();
          it != map.end(); it++) {
-        std::cout << it->first << ": " << it->second << std::endl;
+        ret += it->first + ": " + it->second + '\n';
     }
+    return ret;
 }
 
 std::string& trim_right_inplace(std::string& s,
