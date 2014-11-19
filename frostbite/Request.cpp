@@ -28,8 +28,9 @@ int Request::parse() {
                 
                 ifstream file;
                 file.open(uri.c_str());
+                // if there's no file (404) it's still a valid header
                 if (!file)
-                    return -1;
+                    return 1;
             }
             else {
                 // invalid header - expected e.g. "GET / HTTP/1.1"

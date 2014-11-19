@@ -9,23 +9,24 @@
 #include "Server.h"
 
 // dispatch the request to the correct host for handling
-void Server::dispatch(Request req, int newsockfd) {
-    std::string reqURI = req.getRequestURI();
+void Server::dispatch(Request *req, int newsockfd) {
+    std::string reqURI = req->getRequestURI();
     for (int i = 0; i < hosts.size(); i++) {
-        Hostname h = hosts[i].getHostname();
-        if (h.contains(reqURI)) {
-            hosts[i].handleRequest(req, newsockfd);
+        Hostname *h = hosts[i]->getHostname();
+        if (h->contains(reqURI)) {
+            hosts[i]->handleRequest(req, newsockfd);
         }
     }
 }
 
 void Server::initListen(int sockfd) {
-    int newsockfd, n;
+    int newsockfd;
+    long n;
     char buffer[RECBUF];
     socklen_t clilen;
-    struct sockaddr_in cli_addr;
+    sockaddr_in cli_addr;
     
-    listen(sockfd,5);
+    ::listen(sockfd,5);
     clilen = sizeof(cli_addr);
     
     while (1) {
@@ -39,7 +40,7 @@ void Server::initListen(int sockfd) {
         else if (n == RECBUF-1)
             printf("\n\n\nBUFFER OVERFLOW\n\n\n");
         
-        Request req = Request(string(buffer));
+        Request *req = new Request(string(buffer));
         dispatch(req, newsockfd);
         
         close(newsockfd);
@@ -56,7 +57,7 @@ void Server::initServer() {
         Utils::error("ERROR opening socket");
 
     // set the server configs
-    struct sockaddr_in serv_addr;
+    sockaddr_in serv_addr;
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
@@ -69,8 +70,8 @@ void Server::initServer() {
     // initialise server hosts
     // TODO: read hosts from config file
     std::vector<std::string> h { "localhost" };
-    Hostname hs = Hostname(h);
-    hosts.push_back(Host(hs));
+    Hostname *hs = new Hostname(h);
+    hosts.push_back(new Host(hs));
     
     // begin server listening
     initListen(sockfd);
@@ -79,8 +80,12 @@ void Server::initServer() {
     close(sockfd);
 }
 
+void Server::listen(int port) {
+    this->port = port;
+    initServer();
+}
+
 Server::Server() {}
 Server::Server(int port) {
     this->port = port;
-    initServer();
 }

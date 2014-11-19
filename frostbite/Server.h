@@ -30,14 +30,15 @@ class Server {
 private:
     void initServer();
     void initListen(int);
-    void dispatch(Request, int);
+    void dispatch(Request *, int);
     
     int port;
-    std::vector<Host> hosts;
+    std::vector<Host *> hosts;
     
 public:
     Server();
-    Server(int port);
+    Server(int);
+    void listen(int);
 };
 
 #endif /* defined(__frostbite__Server__) */

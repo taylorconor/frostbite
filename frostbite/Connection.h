@@ -19,13 +19,13 @@ private:
     std::string getAbsoluteURI();
     void printStatus();
     
-    Request req;
-    Response res;
+    Request *req;
+    Response *res;
     int sockfd;
     
 public:
     Connection();
-    Connection(Request, int);
+    Connection(Request *, int);
     
     void handleConnection();
 };

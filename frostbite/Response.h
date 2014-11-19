@@ -40,7 +40,6 @@ private:
     int writeFile();
     std::string getTitle(int);
     
-    Request req;
     std::map<std::string,std::string> header;
     int sockfd;
     int code;

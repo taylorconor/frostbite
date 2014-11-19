@@ -21,15 +21,15 @@
 
 class Host {
 private:
-    Hostname hostname;
+    Hostname *hostname;
     std::vector<Connection> pool;
 public:
     Host();
-    Host(Hostname);
+    Host(Hostname *);
     
-    void handleRequest(Request, int);
+    void handleRequest(Request *, int);
 
-    Hostname getHostname();
+    Hostname *getHostname();
 };
 
 #endif /* defined(__frostbite__Host__) */

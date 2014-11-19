@@ -8,19 +8,22 @@
 
 #include "Host.h"
 
-void Host::handleRequest(Request req, int sockfd) {
-    Connection c = Connection(req, sockfd);
+void Host::handleRequest(Request *req, int sockfd) {
+    Connection *c = new Connection(req, sockfd);
     
-    // TODO: implement connection pooling
+    // TODO: implement connection pooling & callbacks, this code is shit
     //this->pool.push_back(c);
-    c.handleConnection();
+    c->handleConnection();
+    
+    delete c;
+    delete req;
 }
 
 Host::Host() {}
-Host::Host(Hostname hostname) {
+Host::Host(Hostname *hostname) {
     this->hostname = hostname;
 }
 
-Hostname Host::getHostname() {
+Hostname *Host::getHostname() {
     return this->hostname;
 }

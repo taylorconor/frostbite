@@ -10,6 +10,7 @@
 #include "Server.h"
 
 int main(int argc, const char * argv[]) {
-    Server s = Server(1234);
+    Server *s = new Server();
+    s->listen(1234);
     return 0;
 }
