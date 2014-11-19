@@ -20,19 +20,6 @@ int Request::parse() {
                 header["request-method"] = parts[0];
                 header["request-uri"] = parts[1];
                 header["request-http"] = parts[2];
-                
-                // TODO: improve this bullshit! If the request is a directory
-                // that doesn't end with a '/', nothing will even work.
-                string uri = "/Users/Conor/Documents/Projects/frostbite/srv"
-                +parts[1];
-                if (uri.back() == '/')
-                    uri += "index.html";
-                
-                ifstream file;
-                file.open(uri.c_str());
-                // if there's no file (404) it's still a valid header
-                if (!file)
-                    return 1;
             }
             else {
                 // invalid header - expected e.g. "GET / HTTP/1.1"
