@@ -10,6 +10,9 @@
 
 #include "Connection.h"
 
+#define ERR_RESPONSE    this->res = new Response(this->sockfd); \
+                        this->res->send(HTTP_500_INTERNAL_ERR); \
+
 std::vector<std::string> defaultFiles = {"index.html", "index.htm"};
 
 std::string Connection::getAbsoluteURI() {
@@ -22,7 +25,7 @@ std::string Connection::getAbsoluteURI() {
             // it's a directory
             // add a slash to enter the directory if it's not present
             if (uri.back() != '/')
-                uri += "/";
+                uri += '/';
             
             for (int i = 0; i < defaultFiles.size(); i++) {
                 if (Utils::exists(uri+defaultFiles[i])) {
@@ -35,7 +38,8 @@ std::string Connection::getAbsoluteURI() {
             // it's a file, uri is already the absolute uri
         }
         else {
-            // something else
+            // internal server error
+            return nullptr;
         }
     }
     
@@ -58,17 +62,24 @@ void Connection::printStatus() {
 
 void Connection::handleConnection() {
     if (!this->req->isValid()) {
-        this->res = new Response(this->sockfd);
-        this->res->send(HTTP_500_INTERNAL_ERR);
+        ERR_RESPONSE;
         return;
     }
     std::string uri = getAbsoluteURI();
+    if (uri.empty()) {
+        ERR_RESPONSE;
+        return;
+    }
     std::string method = this->req->getRequestMethod();
     
     // TODO: implement other HTTP methods
     if (method == "GET") {
         this->res = new Response(uri, this->sockfd);
         this->res->send();
+    }
+    else {
+        ERR_RESPONSE;
+        return;
     }
     
     printStatus();
