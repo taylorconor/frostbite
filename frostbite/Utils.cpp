@@ -72,3 +72,8 @@ std::vector<std::string> Utils::explode(std::string const &s,
     
     return result;
 }
+
+bool Utils::exists(const std::string& name) {
+    struct stat buffer;
+    return (stat (name.c_str(), &buffer) == 0);
+}

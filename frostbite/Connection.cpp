@@ -10,12 +10,34 @@
 
 #include "Connection.h"
 
+std::vector<std::string> defaultFiles = {"index.html", "index.htm"};
+
 std::string Connection::getAbsoluteURI() {
-    string uri = "/Users/Conor/Documents/Projects/frostbite/srv"
-    +this->req->getRequestURI();
+    string uri = "/Users/Conor/Documents/Projects/frostbite/srv/"
+        +this->req->getRequestURI();
     
-    if (uri.back() == '/')
-        uri += "index.html";
+    struct stat s;
+    if (stat(uri.c_str(), &s) == 0) {
+        if(s.st_mode & S_IFDIR) {
+            // it's a directory
+            // add a slash to enter the directory if it's not present
+            if (uri.back() != '/')
+                uri += "/";
+            
+            for (int i = 0; i < defaultFiles.size(); i++) {
+                if (Utils::exists(uri+defaultFiles[i])) {
+                    uri += defaultFiles[i];
+                    break;
+                }
+            }
+        }
+        else if(s.st_mode & S_IFREG) {
+            // it's a file, uri is already the absolute uri
+        }
+        else {
+            // something else
+        }
+    }
     
     return uri;
 }
@@ -38,6 +60,7 @@ void Connection::handleConnection() {
     if (!this->req->isValid()) {
         this->res = new Response(this->sockfd);
         this->res->send(HTTP_500_INTERNAL_ERR);
+        return;
     }
     std::string uri = getAbsoluteURI();
     std::string method = this->req->getRequestMethod();

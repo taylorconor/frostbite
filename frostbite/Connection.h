@@ -9,7 +9,11 @@
 #ifndef __frostbite__Connection__
 #define __frostbite__Connection__
 
+#include <iostream>
 #include <stdio.h>
+#include <string>
+#include <vector>
+#include <sys/stat.h>
 
 #include "Request.h"
 #include "Response.h"

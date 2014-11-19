@@ -15,6 +15,7 @@
 #include <sstream>
 #include <utility>
 #include <map>
+#include <sys/stat.h>
 
 class Utils {
 public:
@@ -27,6 +28,8 @@ public:
     
     static std::vector<std::string> explode(std::string const &, char);
     static std::vector<std::string> explode(std::string const &, char, int);
+    
+    static bool exists(const std::string&);
 };
 
 #endif /* defined(__frostbite__Utils__) */
