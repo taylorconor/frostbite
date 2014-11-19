@@ -21,6 +21,8 @@ int Request::parse() {
                 header["request-uri"] = parts[1];
                 header["request-http"] = parts[2];
                 
+                // TODO: improve this bullshit! If the request is a directory
+                // that doesn't end with a '/', nothing will even work.
                 string uri = "/Users/Conor/Documents/Projects/frostbite/srv"
                 +parts[1];
                 if (uri.back() == '/')
