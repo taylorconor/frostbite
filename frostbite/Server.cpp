@@ -10,13 +10,109 @@
 
 // dispatch the request to the correct host for handling
 void Server::dispatch(Request *req, int newsockfd) {
-    std::string reqURI = req->getRequestURI();
+    std::string reqHost = req->getRequestParam("Host");
+    bool handled = false;
     for (int i = 0; i < hosts.size(); i++) {
         Hostname *h = hosts[i]->getHostname();
-        if (h->contains(reqURI)) {
+        if (h->contains(reqHost)) {
             hosts[i]->handleRequest(req, newsockfd);
+            handled = true;
+            break;
         }
     }
+    // delete any unhandled requests to stop them from being leaked
+    if (!handled)
+        delete req;
+}
+
+int Server::parseConfigFile() {
+    ifstream file;
+    file.open("/Users/Conor/Documents/Projects/frostbite/srv/.fconfig");
+    if (!file) {
+        return 0;
+    }
+    else {
+        // read whole file into a string
+        std::string s((std::istreambuf_iterator<char>(file)),
+                        std::istreambuf_iterator<char>());
+        
+        // create the JSON document
+        rapidjson::Document document;
+        document.Parse(s.c_str());
+        
+        // get port details
+        if (!document.HasMember("port") || !document["port"].IsInt()) {
+            cout << "ERROR: Config file: member \"port\" missing or " <<
+                "non-int value" << endl;
+            return 0;
+        }
+        this->port = document["port"].GetInt();
+        
+        if (!document.HasMember("hosts") || !document["hosts"].IsArray()) {
+            cout << "ERROR: Config file: member \"hosts\" missing or " <<
+                "non-array value" << endl;
+            return 0;
+        }
+        
+        for (rapidjson::SizeType i = 0; i < document["hosts"].Size(); i++) {
+            if (!document["hosts"][i].HasMember("hostnames")) {
+                cout << "ERROR: Config file: member \"hostnames\" missing " <<
+                    "for host number " << i << endl;
+                return 0;
+            }
+            if (!document["hosts"][i].HasMember("location")) {
+                cout << "ERROR: Config file: member \"location\" missing " <<
+                "for host number " << i << endl;
+                return 0;
+            }
+            
+            // this means that the host goes by multiple hostnames
+            
+            // this is the list of hostnames for this host
+            std::vector<std::string> h;
+            // this is the location for this hostname
+            std::string l;
+            
+            if (document["hosts"][i]["hostnames"].IsArray()) {
+                for (rapidjson::SizeType j = 0;
+                     j < document["hosts"][i]["hostnames"].Size(); j++) {
+                    
+                    if (!document["hosts"][i]["hostnames"][j].IsString()) {
+                        cout << "ERROR: Config file: expected \"hostnames\" " <<
+                            "in \"hosts\" to be of type String or array of " <<
+                            "Strings" << endl;
+                        return 0;
+                    }
+                    h.push_back(document["hosts"][i]["hostnames"][j]
+                                .GetString());
+                }
+            }
+            else if (document["hosts"][i]["hostnames"].IsString()) {
+                h.push_back(document["hosts"][i]["hostnames"].GetString());
+            }
+            else {
+                cout << "ERROR: Config file: expected \"hostnames\" " <<
+                    "in \"hosts\" to be of type String or array of " <<
+                    "Strings for host number " << i << endl;
+                return 0;
+            }
+            
+            if (document["hosts"][i]["location"].IsString()) {
+                l = document["hosts"][i]["location"].GetString();
+            }
+            else {
+                cout << "ERROR: Config file: expected \"location\" " <<
+                    "in \"hosts\" to be of type String for host number " <<
+                    i << endl;
+                return 0;
+            }
+            
+            Hostname *hs = new Hostname(h);
+            hosts.push_back(new Host(hs, l));
+        }
+    }
+    file.close();
+    return 1;
 }
 
 void Server::initListen(int sockfd) {
@@ -28,6 +124,8 @@ void Server::initListen(int sockfd) {
     
     ::listen(sockfd,5);
     clilen = sizeof(cli_addr);
+    
+    bzero(buffer,256);
     
     while (1) {
         newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
@@ -48,6 +146,10 @@ void Server::initListen(int sockfd) {
 }
 
 void Server::initServer() {
+    int status = parseConfigFile();
+    if (!status)
+        return;
+    
     // init the recieving socket and server
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
@@ -66,12 +168,6 @@ void Server::initServer() {
     // try to bind to the port
     if (::bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         Utils::error("ERROR on binding");
-    
-    // initialise server hosts
-    // TODO: read hosts from config file
-    std::vector<std::string> h { "localhost" };
-    Hostname *hs = new Hostname(h);
-    hosts.push_back(new Host(hs));
     
     // begin server listening
     initListen(sockfd);

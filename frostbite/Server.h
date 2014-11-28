@@ -18,6 +18,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include "rapidjson/document.h"
+
 #include "Host.h"
 #include "Hostname.h"
 #include "Request.h"
@@ -31,6 +33,7 @@ private:
     void initServer();
     void initListen(int);
     void dispatch(Request *, int);
+    int parseConfigFile();
     
     int port;
     std::vector<Host *> hosts;

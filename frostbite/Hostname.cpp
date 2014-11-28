@@ -12,9 +12,12 @@
 #include "Hostname.h"
 
 // check if the test string is valid for this hostname
-// TODO: implement this function, complete with smart string parsing
 bool Hostname::contains(std::string test) {
-    return true;
+    for (int i = 0; i < hostnames.size(); i++) {
+        if (test.compare(0, hostnames[i].length(), hostnames[i]) == 0)
+            return true;
+    }
+    return false;
 }
 
 Hostname::Hostname() {}

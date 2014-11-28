@@ -28,6 +28,7 @@ private:
     int sockfd;
     
 public:
+    ~Connection();
     Connection();
     Connection(Request *, int);
     

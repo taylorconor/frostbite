@@ -41,16 +41,20 @@ Request::Request(std::string r) {
 }
 Request::Request() {}
 
-string Request::getRequestMethod() {
+std::string Request::getRequestMethod() {
     return header["request-method"];
 }
 
-string Request::getRequestURI() {
+std::string Request::getRequestURI() {
     return header["request-uri"];
 }
 
-string Request::getRequestHTTP() {
+std::string Request::getRequestHTTP() {
     return header["request-http"];
+}
+
+std::string Request::getRequestParam(std::string param) {
+    return header[param];
 }
 
 bool Request::isValid() {

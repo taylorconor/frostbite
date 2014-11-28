@@ -22,10 +22,11 @@
 class Host {
 private:
     Hostname *hostname;
+    std::string location;
     std::vector<Connection> pool;
 public:
     Host();
-    Host(Hostname *);
+    Host(Hostname *, std::string);
     
     void handleRequest(Request *, int);
 

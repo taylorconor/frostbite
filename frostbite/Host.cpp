@@ -16,12 +16,12 @@ void Host::handleRequest(Request *req, int sockfd) {
     c->handleConnection();
     
     delete c;
-    delete req;
 }
 
 Host::Host() {}
-Host::Host(Hostname *hostname) {
+Host::Host(Hostname *hostname, std::string location) {
     this->hostname = hostname;
+    this->location = location;
 }
 
 Hostname *Host::getHostname() {

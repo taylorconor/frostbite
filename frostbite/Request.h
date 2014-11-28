@@ -37,6 +37,7 @@ public:
     std::string getRequestMethod();
     std::string getRequestURI();
     std::string getRequestHTTP();
+    std::string getRequestParam(std::string);
     bool isValid();
 };
 

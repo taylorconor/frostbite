@@ -83,9 +83,12 @@ void Connection::handleConnection() {
     }
     
     printStatus();
-    delete this->res;
 }
 
+Connection::~Connection() {
+    delete req;
+    delete res;
+}
 Connection::Connection() {}
 Connection::Connection(Request *req, int sockfd) {
     this->sockfd = sockfd;
