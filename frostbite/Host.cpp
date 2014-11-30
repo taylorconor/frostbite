@@ -9,7 +9,7 @@
 #include "Host.h"
 
 void Host::handleRequest(Request *req, int sockfd) {
-    Connection *c = new Connection(req, sockfd);
+    Connection *c = new Connection(req, sockfd, this->location);
     
     // TODO: implement connection pooling & callbacks, this code is shit
     //this->pool.push_back(c);

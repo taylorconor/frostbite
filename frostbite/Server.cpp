@@ -99,6 +99,9 @@ int Server::parseConfigFile() {
             
             if (document["hosts"][i]["location"].IsString()) {
                 l = document["hosts"][i]["location"].GetString();
+                // force the location to end in a slash, for consistency
+                if (l.back() != '/')
+                    l += '/';
             }
             else {
                 cout << "ERROR: Config file: expected \"location\" " <<

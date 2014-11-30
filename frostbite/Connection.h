@@ -18,19 +18,25 @@
 #include "Request.h"
 #include "Response.h"
 
+typedef struct {
+    int status;
+    std::string contents;
+} abs_uri;
+
 class Connection {
 private:
-    std::string getAbsoluteURI();
+    abs_uri *getAbsoluteURI();
     void printStatus();
     
     Request *req;
     Response *res;
     int sockfd;
+    std::string location;
     
 public:
     ~Connection();
     Connection();
-    Connection(Request *, int);
+    Connection(Request *, int, std::string);
     
     void handleConnection();
 };

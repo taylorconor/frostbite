@@ -15,18 +15,32 @@
 
 std::vector<std::string> defaultFiles = {"index.html", "index.htm"};
 
-std::string Connection::getAbsoluteURI() {
-    string uri = "/Users/Conor/Documents/Projects/frostbite/srv/"
-        +this->req->getRequestURI();
+abs_uri *Connection::getAbsoluteURI() {
+    abs_uri *res = new abs_uri;
+    
+    std::string r = this->req->getRequestURI();
+    if (r.front() == '/')
+        r.erase(0,1);
+    std::string uri = this->location + r;
     
     struct stat s;
     if (stat(uri.c_str(), &s) == 0) {
         if(s.st_mode & S_IFDIR) {
             // it's a directory
-            // add a slash to enter the directory if it's not present
-            if (uri.back() != '/')
-                uri += '/';
             
+            // if there's no trailing slash then the browser is going to get
+            // really confused. we need to responde with a 301 Moved Permanently
+            // to tell the browser that the real location has a trailing slash
+            if (uri.back() != '/') {
+                res->status = HTTP_301_MOVED;
+                // here we'll add the slash so that Response will know what to
+                // tell the browser to redirect to
+                res->contents = this->req->getRequestURI() + '/';
+                return res;
+            }
+            
+            // otherwise lets iterate through our defaultFiles and see if we can
+            // find an index file that exits
             for (int i = 0; i < defaultFiles.size(); i++) {
                 if (Utils::exists(uri+defaultFiles[i])) {
                     uri += defaultFiles[i];
@@ -43,7 +57,9 @@ std::string Connection::getAbsoluteURI() {
         }
     }
     
-    return uri;
+    res->status = HTTP_200_OK;
+    res->contents = uri;
+    return res;
 }
 
 void Connection::printStatus() {
@@ -65,7 +81,8 @@ void Connection::handleConnection() {
         ERR_RESPONSE;
         return;
     }
-    std::string uri = getAbsoluteURI();
+    abs_uri *u = getAbsoluteURI();
+    std::string uri = u->contents;
     if (uri.empty()) {
         ERR_RESPONSE;
         return;
@@ -75,7 +92,7 @@ void Connection::handleConnection() {
     // TODO: implement other HTTP methods
     if (method == "GET") {
         this->res = new Response(uri, this->sockfd);
-        this->res->send();
+        this->res->send(u->status);
     }
     else {
         ERR_RESPONSE;
@@ -90,7 +107,8 @@ Connection::~Connection() {
     delete res;
 }
 Connection::Connection() {}
-Connection::Connection(Request *req, int sockfd) {
+Connection::Connection(Request *req, int sockfd, std::string location) {
     this->sockfd = sockfd;
     this->req = req;
+    this->location = location;
 }
