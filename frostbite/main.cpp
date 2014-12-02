@@ -11,6 +11,7 @@
 
 int main(int argc, const char * argv[]) {
     Server *s = new Server();
-    s->listen(1234);
+    if (s->getParseStatus())
+        s->listen();
     return 0;
 }

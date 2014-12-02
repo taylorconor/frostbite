@@ -27,6 +27,8 @@ void Server::dispatch(Request *req, int newsockfd) {
 
 int Server::parseConfigFile() {
     ifstream file;
+    // TODO: move config files to /etc as a standard, and add option to pass
+    // config file location into the binary as a parameter
     file.open("/Users/Conor/Documents/Projects/frostbite/srv/.fconfig");
     if (!file) {
         return 0;
@@ -149,10 +151,6 @@ void Server::initListen(int sockfd) {
 }
 
 void Server::initServer() {
-    int status = parseConfigFile();
-    if (!status)
-        return;
-    
     // init the recieving socket and server
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
@@ -172,6 +170,8 @@ void Server::initServer() {
     if (::bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         Utils::error("ERROR on binding");
     
+    cout << "frostbite server listening on port " << this->port << endl;
+    
     // begin server listening
     initListen(sockfd);
     
@@ -179,12 +179,14 @@ void Server::initServer() {
     close(sockfd);
 }
 
-void Server::listen(int port) {
-    this->port = port;
+void Server::listen() {
     initServer();
 }
 
-Server::Server() {}
-Server::Server(int port) {
-    this->port = port;
+Server::Server() {
+    this->parseStatus = parseConfigFile();
+}
+
+int Server::getParseStatus() {
+    return this->parseStatus;
 }

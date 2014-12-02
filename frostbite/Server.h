@@ -36,12 +36,13 @@ private:
     int parseConfigFile();
     
     int port;
+    int parseStatus;
     std::vector<Host *> hosts;
     
 public:
     Server();
-    Server(int);
-    void listen(int);
+    void listen();
+    int getParseStatus();
 };
 
 #endif /* defined(__frostbite__Server__) */
