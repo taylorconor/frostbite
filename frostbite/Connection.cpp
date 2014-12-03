@@ -16,50 +16,49 @@
 std::vector<std::string> defaultFiles = {"index.html", "index.htm"};
 
 abs_uri *Connection::getAbsoluteURI() {
-    abs_uri *res = new abs_uri;
+    abs_uri *ret = new abs_uri;
     
     std::string r = this->req->getRequestURI();
     if (r.front() == '/')
         r.erase(0,1);
-    std::string uri = this->location + r;
+
+    URI *uri = new URI(this->location + r);
     
-    struct stat s;
-    if (stat(uri.c_str(), &s) == 0) {
-        if(s.st_mode & S_IFDIR) {
-            // it's a directory
-            
+    if (uri->isValid()) {
+        if(uri->isDirectory()) {
             // if there's no trailing slash then the browser is going to get
             // really confused. we need to responde with a 301 Moved Permanently
             // to tell the browser that the real location has a trailing slash
-            if (uri.back() != '/') {
-                res->status = HTTP_301_MOVED;
+            if (uri->src().back() != '/') {
+                ret->status = HTTP_301_MOVED;
                 // here we'll add the slash so that Response will know what to
                 // tell the browser to redirect to
-                res->contents = this->req->getRequestURI() + '/';
-                return res;
+                ret->contents = new URI(this->req->getRequestURI() + '/');
+                return ret;
             }
             
             // otherwise lets iterate through our defaultFiles and see if we can
             // find an index file that exits
             for (int i = 0; i < defaultFiles.size(); i++) {
-                if (Utils::exists(uri+defaultFiles[i])) {
-                    uri += defaultFiles[i];
+                if (Utils::exists(uri->src()+defaultFiles[i])) {
+                    uri->append(defaultFiles[i]);
                     break;
                 }
             }
         }
-        else if(s.st_mode & S_IFREG) {
+        else if(uri->isFile()) {
             // it's a file, uri is already the absolute uri
         }
-        else {
-            // internal server error
-            return nullptr;
-        }
+    }
+    else {
+        ret->status = HTTP_404_NOT_FOUND;
+        ret->contents = nullptr;
+        return ret;
     }
     
-    res->status = HTTP_200_OK;
-    res->contents = uri;
-    return res;
+    ret->status = HTTP_200_OK;
+    ret->contents = uri;
+    return ret;
 }
 
 void Connection::printStatus() {
@@ -82,11 +81,7 @@ void Connection::handleConnection() {
         return;
     }
     abs_uri *u = getAbsoluteURI();
-    std::string uri = u->contents;
-    if (uri.empty()) {
-        ERR_RESPONSE;
-        return;
-    }
+    URI *uri = u->contents;
     std::string method = this->req->getRequestMethod();
     
     // TODO: implement other HTTP methods

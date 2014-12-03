@@ -15,11 +15,11 @@
 
 int Response::writeFile() {
     // uri doesn't *have* to be defined, but if it isn't there's a big problem
-    if (this->uri.empty())
+    if (this->uri->isEmpty())
         return HTTP_500_INTERNAL_ERR;
         
     ifstream file;
-    file.open(uri);
+    file.open(uri->src());
     if (!file) {
         return HTTP_404_NOT_FOUND;
     }
@@ -85,8 +85,8 @@ void Response::send(int code) {
     
     // a 301 Permenantly Moved status requires a location in its response so
     // the browser knows which page to resend its request to
-    if (this->code == HTTP_301_MOVED)
-        header["Location"] = this->uri;
+    if (this->code == HTTP_301_MOVED && uri)
+        header["Location"] = this->uri->src();
     
     std::string s = "HTTP/1.1 " + to_string(this->code) + " " +
     getTitle(this->code) + "\n";
@@ -103,7 +103,7 @@ Response::Response(int sockfd) {
     header["Accept-Ranges"] = "bytes";
     header["Connection"] = "Keep-Alive";
 }
-Response::Response(std::string uri, int sockfd) {
+Response::Response(URI *uri, int sockfd) {
     this->uri = uri;
     this->sockfd = sockfd;
     

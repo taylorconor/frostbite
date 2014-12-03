@@ -21,6 +21,7 @@
 #include <netinet/in.h>
 
 #include "Request.h"
+#include "URI.h"
 #include "Utils.h"
 
 #define HTTP_200_OK                 200
@@ -45,12 +46,12 @@ private:
     std::map<std::string,std::string> header;
     int sockfd;
     int code;
-    std::string uri;
+    URI *uri;
 
 public:
     Response();
     Response(int);
-    Response(std::string, int);
+    Response(URI *, int);
     int getCode();
     void send();
     void send(int);

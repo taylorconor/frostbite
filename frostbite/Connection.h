@@ -13,14 +13,14 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-#include <sys/stat.h>
 
 #include "Request.h"
 #include "Response.h"
+#include "URI.h"
 
 typedef struct {
     int status;
-    std::string contents;
+    URI *contents;
 } abs_uri;
 
 class Connection {
