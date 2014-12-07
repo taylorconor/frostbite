@@ -12,13 +12,18 @@
 #include <stdio.h>
 #include <string>
 #include <sys/stat.h>
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 class URI {
 private:
     void configure();
     std::string source;
+    std::string extension;
     struct stat s;
     int fileStatus;
+    
+    std::string processExt(std::string);
 public:
     URI();
     URI(std::string);
@@ -28,6 +33,8 @@ public:
     bool isFile();
     bool isEmpty();
     std::string src();
+    std::string ext();
+    std::string cleanExt();
 };
 
 #endif /* defined(__frostbite__URI__) */

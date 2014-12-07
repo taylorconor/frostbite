@@ -10,6 +10,7 @@
 #define __frostbite__Response__
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <map>
 #include <string>
 #include <cstdio>

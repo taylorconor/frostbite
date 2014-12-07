@@ -15,13 +15,30 @@
 
 int Response::writeFile() {
     // uri doesn't *have* to be defined, but if it isn't there's a big problem
-    if (this->uri->isEmpty())
+    if (!uri || this->uri->isEmpty())
         return HTTP_500_INTERNAL_ERR;
         
     ifstream file;
     file.open(uri->src());
     if (!file) {
         return HTTP_404_NOT_FOUND;
+    }
+    else if (uri->cleanExt() == ".php") {
+        const char *r = "HTTP/1.1 200 OK\n";
+        safeWrite(this->sockfd, r, strlen(r));
+        const char *h = (Utils::dump_map(this->header) + "\n").c_str();
+        safeWrite(this->sockfd, h, strlen(h));
+        
+        std::string cmd = "php "+uri->src();
+        char *buf = new char[1024];
+        FILE *fp = popen(cmd.c_str(), "r");
+        if (!fp)
+            return HTTP_500_INTERNAL_ERR;
+        
+        while (fgets(buf, sizeof(buf)-1, fp) != NULL) {
+            safeWrite(this->sockfd, buf, strlen(buf));
+        }
+        pclose(fp);
     }
     else {
         // expecting a 200 success unless the socket fails while writing

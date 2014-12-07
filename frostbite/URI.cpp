@@ -12,8 +12,25 @@ std::string URI::src() {
     return this->source;
 }
 
+std::string URI::ext() {
+    return this->extension;
+}
+
+std::string URI::cleanExt() {
+    std::string e = this->extension;
+    if (e == ".phtml" || e.compare(0, 4, ".php") == 0)
+        return ".php";
+    return e;
+}
+
+std::string URI::processExt(std::string e) {
+    boost::algorithm::to_lower(e);
+    return e;
+}
+
 void URI::configure() {
     this->fileStatus = stat(source.c_str(), &s);
+    this->extension = processExt(boost::filesystem::extension(this->source));
 }
 
 URI::URI(std::string source) {

@@ -13,7 +13,10 @@
 #define ERR_RESPONSE    this->res = new Response(this->sockfd); \
                         this->res->send(HTTP_500_INTERNAL_ERR); \
 
-std::vector<std::string> defaultFiles = {"index.html", "index.htm"};
+// TODO: abstract this to the config file
+std::vector<std::string> defaultFiles =
+    {"index.html", "index.htm", "index.php", "index.php3", "index.php4",
+        "index.php5", "index.phtml"};
 
 abs_uri *Connection::getAbsoluteURI() {
     abs_uri *ret = new abs_uri;
