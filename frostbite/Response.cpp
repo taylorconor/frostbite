@@ -39,6 +39,7 @@ int Response::writeFile() {
             safeWrite(this->sockfd, buf, strlen(buf));
         }
         pclose(fp);
+        delete[] buf;
     }
     else {
         // expecting a 200 success unless the socket fails while writing
