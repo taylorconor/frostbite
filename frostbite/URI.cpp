@@ -23,6 +23,12 @@ std::string URI::cleanExt() {
     return e;
 }
 
+std::string URI::parentDir() {
+    boost::filesystem::path p(this->source);
+    std::string filename = p.filename().string();
+    return this->source.substr(0, this->source.length() - filename.length());
+}
+
 std::string URI::processExt(std::string e) {
     boost::algorithm::to_lower(e);
     return e;

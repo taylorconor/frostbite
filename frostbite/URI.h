@@ -35,6 +35,7 @@ public:
     std::string src();
     std::string ext();
     std::string cleanExt();
+    std::string parentDir();
 };
 
 #endif /* defined(__frostbite__URI__) */

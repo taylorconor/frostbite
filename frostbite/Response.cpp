@@ -29,7 +29,10 @@ int Response::writeFile() {
         const char *h = (Utils::dump_map(this->header) + "\n").c_str();
         safeWrite(this->sockfd, h, strlen(h));
         
-        std::string cmd = "php "+uri->src();
+        // make sure to execute the php script from its own parent directory,
+        // for filesystem reference reasons
+        std::string cmd = "cd "+uri->parentDir()+" && php "+uri->src();
+        
         char *buf = new char[1024];
         FILE *fp = popen(cmd.c_str(), "r");
         if (!fp)
