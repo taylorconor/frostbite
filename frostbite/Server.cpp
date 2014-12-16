@@ -143,6 +143,9 @@ void Server::initListen(int sockfd) {
         else if (n == RECBUF-1)
             printf("\n\n\nBUFFER OVERFLOW\n\n\n");
         
+        // silence SIGPIPE errors from being thrown when writing to this socket.
+        // this allows frostbite to easily discard broken sockets without any
+        // unnecessary error handling
         int s = 1;
         setsockopt(newsockfd, SOL_SOCKET, SO_NOSIGPIPE, (void*)&s, sizeof(int));
         
