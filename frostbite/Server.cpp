@@ -143,6 +143,9 @@ void Server::initListen(int sockfd) {
         else if (n == RECBUF-1)
             printf("\n\n\nBUFFER OVERFLOW\n\n\n");
         
+        int s = 1;
+        setsockopt(newsockfd, SOL_SOCKET, SO_NOSIGPIPE, (void*)&s, sizeof(int));
+        
         Request *req = new Request(string(buffer));
         dispatch(req, newsockfd);
         
