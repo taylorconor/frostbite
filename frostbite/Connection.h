@@ -18,10 +18,15 @@
 #include "Response.h"
 #include "URI.h"
 
-typedef struct {
+class abs_uri {
+public:
     int status;
     URI *contents;
-} abs_uri;
+    
+    ~abs_uri() {
+        delete this->contents;
+    }
+};
 
 class Connection {
 private:

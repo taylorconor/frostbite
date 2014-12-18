@@ -37,6 +37,8 @@ abs_uri *Connection::getAbsoluteURI() {
                 // here we'll add the slash so that Response will know what to
                 // tell the browser to redirect to
                 ret->contents = new URI(this->req->getRequestURI() + '/');
+                delete uri;
+                
                 return ret;
             }
             
@@ -56,6 +58,7 @@ abs_uri *Connection::getAbsoluteURI() {
     else {
         ret->status = HTTP_404_NOT_FOUND;
         ret->contents = nullptr;
+        delete uri;
         return ret;
     }
     
@@ -94,8 +97,11 @@ void Connection::handleConnection() {
     }
     else {
         ERR_RESPONSE;
+        delete uri;
         return;
     }
+    
+    delete u;
     
     printStatus();
 }

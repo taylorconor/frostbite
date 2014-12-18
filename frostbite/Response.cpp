@@ -35,11 +35,19 @@ int Response::writeFile() {
         
         char *buf = new char[1024];
         FILE *fp = popen(cmd.c_str(), "r");
-        if (!fp)
+        if (!fp) {
+            delete[] buf;
             return HTTP_500_INTERNAL_ERR;
+        }
         
-        while (fgets(buf, sizeof(buf)-1, fp) != NULL) {
-            safeWrite(this->sockfd, buf, strlen(buf));
+        while (fgets(buf, /*sizeof(buf)-1*/1024, fp) != NULL) {
+            if (write(this->sockfd, buf, strlen(buf)) < 0) {
+                cout << "Error: Unable to write to socket " << this->sockfd <<
+                    endl;
+                pclose(fp);
+                delete[] buf;
+                return HTTP_500_INTERNAL_ERR;
+            }
         }
         pclose(fp);
         delete[] buf;
@@ -55,7 +63,12 @@ int Response::writeFile() {
         
         while (file) {
             file.read(buf, 1024);
-            safeWrite(this->sockfd, buf, file.gcount());
+            if (write(this->sockfd, buf, file.gcount()) < 0) {
+                cout << "Error: Unable to write to socket " << this->sockfd <<
+                endl;
+                delete[] buf;
+                return HTTP_500_INTERNAL_ERR;
+            }
         }
         delete[] buf;
     }
