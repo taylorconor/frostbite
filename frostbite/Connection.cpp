@@ -75,13 +75,13 @@ void Connection::printStatus() {
     else
         cout << "OK" << "\t";
     
-    cout << code << "\t";
-    cout << this->req->getRequestMethod() << "\t";
-    cout << this->req->getRequestURI() << "\t";
-    cout << endl;
+    cout << code << "\t" << this->req->getRequestMethod() << "\t"
+        << this->req->getRequestURI() << "\t" << endl;
 }
 
 void Connection::handleConnection() {
+    this->status = IN_PROGRESS;
+    
     if (!this->req->isValid()) {
         ERR_RESPONSE;
         return;
@@ -104,6 +104,7 @@ void Connection::handleConnection() {
     delete u;
     
     printStatus();
+    this->status = COMPLETED;
 }
 
 Connection::~Connection() {
@@ -115,4 +116,13 @@ Connection::Connection(Request *req, int sockfd, std::string location) {
     this->sockfd = sockfd;
     this->req = req;
     this->location = location;
+    this->status = WAITING;
+}
+
+int Connection::getStatus() {
+    return this->status;
+}
+
+int Connection::getSockfd() {
+    return this->sockfd;
 }

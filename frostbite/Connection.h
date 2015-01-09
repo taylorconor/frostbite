@@ -18,6 +18,10 @@
 #include "Response.h"
 #include "URI.h"
 
+#define WAITING     0
+#define IN_PROGRESS 1
+#define COMPLETED   2
+
 class abs_uri {
 public:
     int status;
@@ -32,6 +36,7 @@ class Connection {
 private:
     abs_uri *getAbsoluteURI();
     void printStatus();
+    int status;
     
     Request *req;
     Response *res;
@@ -42,6 +47,8 @@ public:
     ~Connection();
     Connection();
     Connection(Request *, int, std::string);
+    int getStatus();
+    int getSockfd();
     
     void handleConnection();
 };

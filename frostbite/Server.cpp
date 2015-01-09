@@ -152,7 +152,7 @@ void Server::initListen(int sockfd) {
         Request *req = new Request(string(buffer));
         dispatch(req, newsockfd);
         
-        close(newsockfd);
+        //close(newsockfd);
     }
 }
 

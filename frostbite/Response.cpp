@@ -8,10 +8,7 @@
 
 #include "Response.h"
 
-#define safeWrite(x,y,z) if (write(x,y,z) < 0) { \
-                            cout << "Error: Unable to write to socket " \
-                                << this->sockfd << endl; \
-                            return HTTP_500_INTERNAL_ERR; }
+long status;
 
 int Response::writeFile() {
     // uri doesn't *have* to be defined, but if it isn't there's a big problem
@@ -25,9 +22,15 @@ int Response::writeFile() {
     }
     else if (uri->cleanExt() == ".php") {
         const char *r = "HTTP/1.1 200 OK\n";
-        safeWrite(this->sockfd, r, strlen(r));
+        if (write(this->sockfd, r, strlen(r)) < 0) {
+            cout << "Error: Unable to write to socket " << this->sockfd << endl;
+            return HTTP_500_INTERNAL_ERR;
+        }
         const char *h = (Utils::dump_map(this->header) + "\n").c_str();
-        safeWrite(this->sockfd, h, strlen(h));
+        if (write(this->sockfd, h, strlen(h)) < 0) {
+            cout << "Error: Unable to write to socket " << this->sockfd << endl;
+            return HTTP_500_INTERNAL_ERR;
+        }
         
         // make sure to execute the php script from its own parent directory,
         // for filesystem reference reasons
@@ -41,9 +44,10 @@ int Response::writeFile() {
         }
         
         while (fgets(buf, /*sizeof(buf)-1*/1024, fp) != NULL) {
-            if (write(this->sockfd, buf, strlen(buf)) < 0) {
-                cout << "Error: Unable to write to socket " << this->sockfd <<
-                    endl;
+            long status = write(this->sockfd, buf, strlen(buf));
+            if (status < 0) {
+                cout << "Error: Unable to write to socket "
+                    << this->sockfd << "; " << strerror(errno) << endl;
                 pclose(fp);
                 delete[] buf;
                 return HTTP_500_INTERNAL_ERR;
@@ -55,17 +59,24 @@ int Response::writeFile() {
     else {
         // expecting a 200 success unless the socket fails while writing
         const char *r = "HTTP/1.1 200 OK\n";
-        safeWrite(this->sockfd, r, strlen(r));
+        if (write(this->sockfd, r, strlen(r)) < 0) {
+            cout << "Error: Unable to write to socket " << this->sockfd << endl;
+            return HTTP_500_INTERNAL_ERR;
+        }
         const char *h = (Utils::dump_map(this->header) + "\n").c_str();
-        safeWrite(this->sockfd, h, strlen(h));
+        if (write(this->sockfd, h, strlen(h)) < 0) {
+            cout << "Error: Unable to write to socket " << this->sockfd << endl;
+            return HTTP_500_INTERNAL_ERR;
+        }
         
         char *buf = new char[1024];
         
         while (file) {
             file.read(buf, 1024);
-            if (write(this->sockfd, buf, file.gcount()) < 0) {
-                cout << "Error: Unable to write to socket " << this->sockfd <<
-                endl;
+            long status = write(this->sockfd, buf, file.gcount());
+            if (status < 0) {
+                cout << "Error: Unable to write to socket "
+                    << this->sockfd << "; " << strerror(errno) << endl;
                 delete[] buf;
                 return HTTP_500_INTERNAL_ERR;
             }

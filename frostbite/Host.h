@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <thread>
 
 #include "Hostname.h"
 #include "Request.h"
@@ -21,9 +22,13 @@
 
 class Host {
 private:
+    void watchPool();
+    
     Hostname *hostname;
     std::string location;
-    std::vector<Connection> pool;
+    std::vector<Connection *> pool;
+    std::thread watcher;
+    bool shouldWatch;
 public:
     Host();
     Host(Hostname *, std::string);
