@@ -11,15 +11,21 @@
 void Host::handleRequest(Request *req, int sockfd) {
     Connection *c = new Connection(req, sockfd, this->location);
     
-    // TODO: implement connection pooling & callbacks, this code is shit
+    // add connection to the pool and notify the pool watcher thread
     this->pool.push_back(c);
-    //c->handleConnection();
-    
-    //delete c;
+    cv_watcher.notify_all();
 }
 
 void Host::watchPool() {
+    // create a unique lock for the condition variable to wait on
+    std::unique_lock<std::mutex> lck(mtx_watcher);
+    
     while (this->shouldWatch) {
+        // immediately wait on cv_watcher until data appears in the pool
+        if (this->pool.size() == 0) {
+            cv_watcher.wait(lck);
+        }
+        
         // make sure the pool has connections in it before operating
         if (this->pool.size() > 0) {
             for (int i = 0; i < this->pool.size(); i++) {

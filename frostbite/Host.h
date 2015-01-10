@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <condition_variable>
 
 #include "Hostname.h"
 #include "Request.h"
@@ -28,6 +29,8 @@ private:
     std::string location;
     std::vector<Connection *> pool;
     std::thread watcher;
+    std::condition_variable cv_watcher;
+    std::mutex mtx_watcher;
     bool shouldWatch;
 public:
     Host();
