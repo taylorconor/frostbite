@@ -10,7 +10,7 @@
 #include "Server.h"
 
 int main(int argc, const char * argv[]) {
-    Server *s = new Server();
+    Server *s = Server::getInstance();
     if (s->getParseStatus())
         s->listen();
     return 0;

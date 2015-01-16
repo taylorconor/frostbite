@@ -30,6 +30,9 @@
 
 class Server {
 private:
+    static Server *instance;
+    Server();
+    
     void initServer();
     void initListen(int);
     void dispatch(Request *, int);
@@ -40,7 +43,8 @@ private:
     std::vector<Host *> hosts;
     
 public:
-    Server();
+    static Server *getInstance();
+    
     void listen();
     int getParseStatus();
 };

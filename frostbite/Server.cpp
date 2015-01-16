@@ -8,6 +8,8 @@
 
 #include "Server.h"
 
+Server *Server::instance = nullptr;
+
 // dispatch the request to the correct host for handling
 void Server::dispatch(Request *req, int newsockfd) {
     std::string reqHost = req->getRequestParam("Host");
@@ -151,8 +153,6 @@ void Server::initListen(int sockfd) {
         
         Request *req = new Request(string(buffer));
         dispatch(req, newsockfd);
-        
-        //close(newsockfd);
     }
 }
 
@@ -191,6 +191,13 @@ void Server::listen() {
 
 Server::Server() {
     this->parseStatus = parseConfigFile();
+}
+
+Server *Server::getInstance() {
+    if (instance == NULL) {
+        instance = new Server();
+    }
+    return instance;
 }
 
 int Server::getParseStatus() {
