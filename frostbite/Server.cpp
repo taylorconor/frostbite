@@ -172,6 +172,12 @@ void Server::initServer() {
     serv_addr.sin_addr.s_addr = INADDR_ANY;
     serv_addr.sin_port = htons(port);
     
+    // silence SIGPIPE
+    int s = 1;
+    setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, (void*)&s, sizeof(int));
+    // ignore binding errors
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (void*)&s, sizeof(int));
+    
     // try to bind to the port
     if (::bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         Utils::error("ERROR on binding");
