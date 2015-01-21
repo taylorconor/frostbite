@@ -10,6 +10,8 @@
 
 #include "Connection.h"
 
+std::mutex *Connection::mtx = new std::mutex();
+
 #define ERR_RESPONSE    this->res = new Response(this->sockfd); \
                         this->res->send(HTTP_500_INTERNAL_ERR); \
 
@@ -70,6 +72,7 @@ abs_uri *Connection::getAbsoluteURI() {
 void Connection::printStatus() {
     int code = this->res->getCode();
     
+    mtx->lock();
     if (code > 400)
         cout << "ERR" << "\t";
     else
@@ -77,11 +80,10 @@ void Connection::printStatus() {
     
     cout << code << "\t" << this->req->getRequestMethod() << "\t"
         << this->req->getRequestURI() << "\t" << endl;
+    mtx->unlock();
 }
 
-void Connection::handleConnection() {
-    this->status = IN_PROGRESS;
-    
+void Connection::handleConnection() {    
     if (!this->req->isValid()) {
         ERR_RESPONSE;
         return;
@@ -93,18 +95,21 @@ void Connection::handleConnection() {
     // TODO: implement other HTTP methods
     if (method == "GET") {
         this->res = new Response(uri, this->sockfd);
+        mtx->lock();
         this->res->send(u->status);
+        mtx->unlock();
     }
     else {
+        mtx->lock();
         ERR_RESPONSE;
+        mtx->unlock();
         delete uri;
         return;
     }
     
     delete u;
-    
     printStatus();
-    this->status = COMPLETED;
+    this->completed = true;
 }
 
 Connection::~Connection() {
@@ -116,13 +121,16 @@ Connection::Connection(Request *req, int sockfd, std::string location) {
     this->sockfd = sockfd;
     this->req = req;
     this->location = location;
-    this->status = WAITING;
-}
-
-int Connection::getStatus() {
-    return this->status;
+    this->completed = false;
 }
 
 int Connection::getSockfd() {
     return this->sockfd;
+}
+bool Connection::isCompleted() {
+    return this->completed;
+}
+
+std::string Connection::getRequestName() {
+    return this->req->getRequestURI();
 }

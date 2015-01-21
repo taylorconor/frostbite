@@ -21,13 +21,24 @@
 #include "Connection.h"
 #include "Utils.h"
 
+#define WAITING     0
+#define IN_PROGRESS 1
+
+struct ConnectionWrapper {
+    Connection *connection;
+    int status;
+    ~ConnectionWrapper() {
+        delete connection;
+    }
+};
+
 class Host {
 private:
     void watchPool();
     
     Hostname *hostname;
     std::string location;
-    std::vector<Connection *> pool;
+    std::vector<ConnectionWrapper *> pool;
     std::thread watcher;
     std::condition_variable cv_watcher;
     std::mutex mtx_watcher;

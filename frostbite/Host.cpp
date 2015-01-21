@@ -9,7 +9,9 @@
 #include "Host.h"
 
 void Host::handleRequest(Request *req, int sockfd) {
-    Connection *c = new Connection(req, sockfd, this->location);
+    ConnectionWrapper *c = new ConnectionWrapper;
+    c->connection = new Connection(req, sockfd, this->location);
+    c->status = WAITING;
     
     // add connection to the pool and notify the pool watcher thread
     this->pool.push_back(c);
@@ -30,17 +32,21 @@ void Host::watchPool() {
         if (this->pool.size() > 0) {
             for (int i = 0; i < this->pool.size(); i++) {
                 // clean up any completed connections
-                if (this->pool[i]->getStatus() == COMPLETED) {
+                if (this->pool[i]->status == IN_PROGRESS &&
+                        this->pool[i]->connection->isCompleted()) {
                     // close the socket associated with the connection
-                    close(this->pool[i]->getSockfd());
+                    close(this->pool[i]->connection->getSockfd());
                     // delete the connection
                     delete this->pool[i];
                     // remove the deleted pointer from the pool
                     this->pool.erase(this->pool.begin() + i);
                 }
                 // handle any waiting connections
-                else if (this->pool[i]->getStatus() == WAITING) {
-                    this->pool[i]->handleConnection();
+                else if (this->pool[i]->status == WAITING) {
+                    this->pool[i]->status = IN_PROGRESS;
+                    this->pool[i]->connection->thread =
+                        new std::thread(&Connection::handleConnection,
+                                    this->pool[i]->connection);
                 }
             }
         }

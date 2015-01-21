@@ -43,7 +43,7 @@ int Response::writeFile() {
             return HTTP_500_INTERNAL_ERR;
         }
         
-        while (fgets(buf, /*sizeof(buf)-1*/1024, fp) != NULL) {
+        while (fgets(buf, sizeof(buf)-1, fp) != NULL) {
             long status = write(this->sockfd, buf, strlen(buf));
             if (status < 0) {
                 cout << "Error: Unable to write to socket "

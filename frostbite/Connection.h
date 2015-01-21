@@ -13,14 +13,11 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <thread>
 
 #include "Request.h"
 #include "Response.h"
 #include "URI.h"
-
-#define WAITING     0
-#define IN_PROGRESS 1
-#define COMPLETED   2
 
 class abs_uri {
 public:
@@ -36,19 +33,23 @@ class Connection {
 private:
     abs_uri *getAbsoluteURI();
     void printStatus();
-    int status;
     
     Request *req;
     Response *res;
     int sockfd;
+    bool completed;
     std::string location;
     
 public:
+    std::thread *thread;
+    static std::mutex *mtx;
+    
     ~Connection();
     Connection();
     Connection(Request *, int, std::string);
-    int getStatus();
+    bool isCompleted();
     int getSockfd();
+    std::string getRequestName();
     
     void handleConnection();
 };
