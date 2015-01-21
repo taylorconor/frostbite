@@ -72,14 +72,18 @@ abs_uri *Connection::getAbsoluteURI() {
 void Connection::printStatus() {
     int code = this->res->getCode();
     
-    mtx->lock();
-    if (code > 400)
-        cout << "ERR" << "\t";
-    else
-        cout << "OK" << "\t";
+    std::string output;
     
-    cout << code << "\t" << this->req->getRequestMethod() << "\t"
-        << this->req->getRequestURI() << "\t" << endl;
+    if (code > 400)
+        output += "ERR\t";
+    else
+        output += "OK\t";
+    
+    output += std::to_string(code)+"\t"+this->req->getRequestMethod()+"\t"+
+    this->req->getRequestURI()+"\n";
+    
+    mtx->lock();
+    cout << output;
     mtx->unlock();
 }
 
@@ -95,14 +99,10 @@ void Connection::handleConnection() {
     // TODO: implement other HTTP methods
     if (method == "GET") {
         this->res = new Response(uri, this->sockfd);
-        mtx->lock();
         this->res->send(u->status);
-        mtx->unlock();
     }
     else {
-        mtx->lock();
         ERR_RESPONSE;
-        mtx->unlock();
         delete uri;
         return;
     }

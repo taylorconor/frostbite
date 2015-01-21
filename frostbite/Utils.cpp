@@ -10,7 +10,6 @@
 
 void Utils::error(const char *msg) {
     perror(msg);
-    exit(1);
 }
 
 std::string Utils::dump_map(const std::map<std::string, std::string>& map) {
