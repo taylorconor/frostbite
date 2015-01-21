@@ -21,12 +21,9 @@
 #include "Connection.h"
 #include "Utils.h"
 
-#define WAITING     0
-#define IN_PROGRESS 1
-
 struct ConnectionWrapper {
     Connection *connection;
-    int status;
+    bool isWaiting = true;
     ~ConnectionWrapper() {
         delete connection;
     }
@@ -40,7 +37,7 @@ private:
     std::string location;
     std::vector<ConnectionWrapper *> pool;
     std::thread watcher;
-    std::condition_variable cv_watcher;
+    std::condition_variable *cv_watcher;
     std::mutex mtx_watcher;
     bool shouldWatch;
 public:
