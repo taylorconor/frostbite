@@ -148,9 +148,9 @@ void Server::initListen(int sockfd) {
         for (int i = 0; newsockfd < 0; i++) {
             newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
             if (i >= MAX_ACCEPT_ATTEMPTS && newsockfd < 0)
-                Utils::error(std::string("ERROR on accept; failed ")
+                Utils::error("ERROR on accept; failed "
                              +std::to_string(MAX_ACCEPT_ATTEMPTS)
-                             +std::string("attempts"));
+                             +"attempts");
         }
         bzero(buffer,256);
         n = read(newsockfd,buffer,RECBUF-1);
