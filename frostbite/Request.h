@@ -18,6 +18,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include <boost/algorithm/string.hpp>
+
 #include "Utils.h"
 
 using namespace std;

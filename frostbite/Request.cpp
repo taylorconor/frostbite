@@ -9,10 +9,10 @@
 #include "Request.h"
 
 int Request::parse() {
-    std::istringstream f(this->source);
+    std::istringstream f(source);
     std::string line;
-    for (int i = 0; getline(f, line); i++) {
-        // parse the request type, e.g. "GET / HTTP/1.1"
+    std::string::size_type index;
+    for (int i = 0; std::getline(f, line) && line != "\r"; i++) {
         if (i == 0) {
             // break the request type into its 3 parts
             std::vector<std::string> parts = Utils::explode(line, ' ');
@@ -21,17 +21,18 @@ int Request::parse() {
                 header["request-uri"] = parts[1];
                 header["request-http"] = parts[2];
             }
-            else {
-                // invalid header - expected e.g. "GET / HTTP/1.1"
-                return -1;
-            }
         }
         else {
-            std::vector<std::string> parts = Utils::explode(line, ':', 2);  
-            if (parts.size() == 2)
-                header[parts[0]] = parts[1];
+            index = line.find(':', 0);
+            if(index != std::string::npos) {
+                header.insert(std::make_pair(
+                    boost::algorithm::trim_copy(line.substr(0, index)),
+                    boost::algorithm::trim_copy(line.substr(index + 1))
+                ));
+            }
         }
     }
+    
     return 1;
 }
 
