@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <queue>
 #include <condition_variable>
 
 #include "Hostname.h"
@@ -21,28 +22,23 @@
 #include "Connection.h"
 #include "Utils.h"
 
-struct ConnectionWrapper {
-    Connection *connection;
-    bool isWaiting = true;
-    ~ConnectionWrapper() {
-        delete connection;
-    }
-};
-
 class Host {
 private:
     void watchPool();
     
     Hostname *hostname;
     std::string location;
-    std::vector<ConnectionWrapper *> pool;
+    std::queue<Connection *> pool;
+    std::vector<std::thread *> thread_pool;
     std::thread watcher;
     std::condition_variable *cv_watcher;
     std::mutex mtx_watcher;
+    std::mutex mtx_pool;
+    int threads;
     bool shouldWatch;
 public:
     Host();
-    Host(Hostname *, std::string);
+    Host(Hostname *, std::string, int);
     
     void handleRequest(Request *, int);
 

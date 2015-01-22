@@ -26,7 +26,8 @@
 #include "Response.h"
 #include "Utils.h"
 
-#define RECBUF  4096
+#define RECBUF              4096
+#define DEFAULT_CONNECTIONS 256
 
 class Server {
 private:

@@ -9,58 +9,42 @@
 #include "Host.h"
 
 void Host::handleRequest(Request *req, int sockfd) {
-    ConnectionWrapper *c = new ConnectionWrapper;
-    c->connection = new Connection(req, sockfd, location);
-    
+    Connection *c = new Connection(req, sockfd, location);
     // add connection to the pool and notify the pool watcher thread
-    pool.push_back(c);
-    cv_watcher->notify_all();
+    pool.push(c);
+    cv_watcher->notify_one();
 }
 
 void Host::watchPool() {
-    // create a unique lock for the condition variable to wait on
-    std::unique_lock<std::mutex> lck(mtx_watcher);
-    
     while (shouldWatch) {
-        // immediately wait on cv_watcher until data appears in the pool
-        if (pool.size() == 0) {
-            cv_watcher->wait(lck);
-        }
+        // create a unique lock for the condition variable to wait on
+        std::unique_lock<std::mutex> lck(mtx_watcher);
         
-        // make sure the pool has connections in it before operating
-        if (pool.size() > 0) {
-            for (int i = 0; i < pool.size(); i++) {
-                // clean up any completed connections
-                if (!pool[i]->isWaiting && pool[i]->connection->isCompleted()) {
-                    // close the socket associated with the connection
-                    close(pool[i]->connection->getSockfd());
-                    // delete the connection's thread
-                    pool[i]->connection->thread->join();
-                    delete pool[i]->connection->thread;
-                    // delete the connection
-                    delete pool[i];
-                    // remove the deleted pointer from the pool
-                    pool.erase(pool.begin() + i);
-                }
-                // handle any waiting connections
-                else if (this->pool[i]->isWaiting) {
-                    pool[i]->isWaiting = false;
-                    pool[i]->connection->thread =
-                        new std::thread(&Connection::handleConnection,
-                                    this->pool[i]->connection);
-                }
-            }
-        }
+        // immediately wait on cv_watcher until pool requests this thread
+        cv_watcher->wait(lck);
+        
+        // take an item from the pool
+        mtx_pool.lock();
+        Connection *item = pool.front();
+        pool.pop();
+        mtx_pool.unlock();
+        
+        item->handleConnection();
+        close(item->getSockfd());
+        delete item;
     }
 }
 
 Host::Host() {}
-Host::Host(Hostname *hostname, std::string location) {
+Host::Host(Hostname *hostname, std::string location, int threads) {
     this->hostname = hostname;
     this->location = location;
     this->shouldWatch = true;
     this->cv_watcher = new std::condition_variable();
-    this->watcher = std::thread(&Host::watchPool, this);
+    this->threads = threads;
+    for (int i = 0; i < this->threads; i++) {
+        this->thread_pool.push_back(new std::thread(&Host::watchPool, this));
+    }
 }
 
 Hostname *Host::getHostname() {

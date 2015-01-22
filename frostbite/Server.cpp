@@ -76,6 +76,9 @@ int Server::parseConfigFile() {
             std::vector<std::string> h;
             // this is the location for this hostname
             std::string l;
+            // this is the amount of concurrent connections allowed for this
+            // host.
+            int c = DEFAULT_CONNECTIONS;
             
             if (document["hosts"][i]["hostnames"].IsArray()) {
                 for (rapidjson::SizeType j = 0;
@@ -114,8 +117,14 @@ int Server::parseConfigFile() {
                 return 0;
             }
             
+            
+            if (document["hosts"][i].HasMember("connections") &&
+                    document["hosts"][i]["connections"].IsInt()) {
+                c = document["hosts"][i]["connections"].GetInt();
+            }
+            
             Hostname *hs = new Hostname(h);
-            hosts.push_back(new Host(hs, l));
+            hosts.push_back(new Host(hs, l, c));
         }
     }
     file.close();
