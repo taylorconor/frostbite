@@ -25,7 +25,7 @@
 #include "URI.h"
 #include "Utils.h"
 
-#define POSIX_MAX_BUF               4096
+#define MAX_BUF                     4096
 
 #define HTTP_200_OK                 200
 #define HTTP_301_MOVED              301

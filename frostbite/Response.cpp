@@ -32,14 +32,14 @@ int Response::writeFile() {
         // for filesystem reference reasons
         std::string cmd = "cd "+uri->parentDir()+" && php "+uri->src();
         
-        char *buf = new char[POSIX_MAX_BUF];
+        char *buf = new char[MAX_BUF];
         FILE *fp = popen(cmd.c_str(), "r");
         if (!fp) {
             delete[] buf;
             return HTTP_500_INTERNAL_ERR;
         }
         
-        while (fgets(buf, POSIX_MAX_BUF-1, fp) != NULL) {
+        while (fgets(buf, MAX_BUF-1, fp) != NULL) {
             long status = write(this->sockfd, buf, strlen(buf));
             if (status < 0) {
                 cout << "Error: Unable to write to socket "
@@ -61,10 +61,10 @@ int Response::writeFile() {
             return HTTP_500_INTERNAL_ERR;
         }
         
-        char *buf = new char[1024];
+        char *buf = new char[MAX_BUF];
         
         while (file) {
-            file.read(buf, 1024);
+            file.read(buf, MAX_BUF);
             long status = write(this->sockfd, buf, file.gcount());
             if (status < 0) {
                 cout << "Error: Unable to write to socket "
