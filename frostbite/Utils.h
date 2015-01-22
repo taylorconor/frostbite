@@ -19,7 +19,7 @@
 
 class Utils {
 public:
-    static void error(const char *);
+    static void error(std::string);
     
     static std::string dump_map(const std::map<std::string,
                                      std::string>& map);

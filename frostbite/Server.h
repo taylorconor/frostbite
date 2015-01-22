@@ -28,6 +28,7 @@
 
 #define RECBUF              4096
 #define DEFAULT_CONNECTIONS 256
+#define MAX_ACCEPT_ATTEMPTS 10
 
 class Server {
 private:

@@ -8,8 +8,8 @@
 
 #include "Utils.h"
 
-void Utils::error(const char *msg) {
-    perror(msg);
+void Utils::error(std::string msg) {
+    perror(msg.c_str());
 }
 
 std::string Utils::dump_map(const std::map<std::string, std::string>& map) {
