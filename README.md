@@ -1,15 +1,21 @@
 # frostbite
 
-frostbite is a tiny pre-pre-alpha HTTP server written in C++. planned features include:
+frostbite is a tiny pre-pre-alpha HTTP server written in C++. 
 
-  - full HTTP standard compliance
+features include:
+
   - connection pooling
   - PHP interpreter
   - [RapidJSON] for JSON config file parsing
+        
+planned features:
+          
+  - full HTTP standard compliance
 
-### Config file
 
-An example config file (.fconfig) for frostbite configuration is as follows
+## Config file
+
+an example config file (`.fconfig`) for frostbite configuration is as follows:
 ```javascript
 {
     "port": 80,     // TCP port to listen on
@@ -20,10 +26,9 @@ An example config file (.fconfig) for frostbite configuration is as follows
             "connections": 64                           // max concurrent connections
         }
     ]
-}
+}```
 
-
-#### Version
+## Version
 0.0.1
 
 [RapidJSON]:https://github.com/miloyip/rapidjson
