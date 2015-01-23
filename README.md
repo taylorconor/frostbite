@@ -12,12 +12,12 @@ frostbite is a tiny pre-pre-alpha HTTP server written in C++. planned features i
 An example config file (.fconfig) for frostbite configuration is as follows
 ```javascript
 {
-    "port": 1234,
-    "hosts": [
+    "port": 80,     // TCP port to listen on
+    "hosts": [      // frostbite supports multiple hosts per server
         {
-            "hostnames": ["localhost", "www.localhost"],
-            "location": "/Users/Conor/Documents/Projects/frostbite/srv",
-            "connections": 64
+            "hostnames": ["example.com", "www.example.com"], // hostnames for this host
+            "location": "/var/www/html",                     // root document directory
+            "connections": 64                                // max concurrent connections
         }
     ]
 }
