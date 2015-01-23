@@ -15,9 +15,9 @@ An example config file (.fconfig) for frostbite configuration is as follows
     "port": 80,     // TCP port to listen on
     "hosts": [      // frostbite supports multiple hosts per server
         {
-            "hostnames": ["example.com", "www.example.com"], // hostnames for this host
-            "location": "/var/www/html",                     // root document directory
-            "connections": 64                                // max concurrent connections
+            "hostnames": ["test.com", "www.test.com"],  // hostnames for this host
+            "location": "/var/www/html",                // root document directory
+            "connections": 64                           // max concurrent connections
         }
     ]
 }
