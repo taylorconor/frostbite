@@ -102,7 +102,8 @@ void Connection::handleConnection() {
         this->res->send(u->status);
     }
     else {
-        ERR_RESPONSE;
+        this->res = new Response(this->sockfd);
+        this->res->send(HTTP_405_METHOD_NOT_ALLOWED);
         delete uri;
         return;
     }

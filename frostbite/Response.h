@@ -25,21 +25,23 @@
 #include "URI.h"
 #include "Utils.h"
 
-#define MAX_BUF                     4096
+#define MAX_BUF                         4096
 
-#define HTTP_200_OK                 200
-#define HTTP_301_MOVED              301
-#define HTTP_400_BAD_REQUEST        400
-#define HTTP_404_NOT_FOUND          404
-#define HTTP_500_INTERNAL_ERR       500
-#define HTTP_550_NO_PERMISSION      550
+#define HTTP_200_OK                     200
+#define HTTP_301_MOVED                  301
+#define HTTP_400_BAD_REQUEST            400
+#define HTTP_404_NOT_FOUND              404
+#define HTTP_405_METHOD_NOT_ALLOWED     405
+#define HTTP_500_INTERNAL_ERR           500
+#define HTTP_550_NO_PERMISSION          550
 
-#define HTTP_200_OK_STR             "OK"
-#define HTTP_301_MOVED_STR          "Moved Permanently"
-#define HTTP_400_BAD_REQUEST_STR    "Bad Request"
-#define HTTP_404_NOT_FOUND_STR      "Not Found"
-#define HTTP_500_INTERNAL_ERR_STR   "Internal Server Error"
-#define HTTP_550_NO_PERMISSION_STR  "No Permission"
+#define HTTP_200_OK_STR                 "OK"
+#define HTTP_301_MOVED_STR              "Moved Permanently"
+#define HTTP_400_BAD_REQUEST_STR        "Bad Request"
+#define HTTP_404_NOT_FOUND_STR          "Not Found"
+#define HTTP_405_METHOD_NOT_ALLOWED_STR "Method not allowed"
+#define HTTP_500_INTERNAL_ERR_STR       "Internal Server Error"
+#define HTTP_550_NO_PERMISSION_STR      "No Permission"
 
 class Response {
 private:

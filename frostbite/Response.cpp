@@ -102,10 +102,8 @@ void Response::send() {
     this->code = writeFile();
     
     if (this->code != HTTP_200_OK) {
-        std::string s = "HTTP/1.1 " + to_string(this->code) + " " +
-        getTitle(this->code) + "\n";
-        write(this->sockfd, s.c_str(), strlen(s.c_str()));
-        std::string h = Utils::dump_map(this->header);
+        std::string h = "HTTP/1.1 " + to_string(this->code) + " " +
+            getTitle(this->code) + "\n" + Utils::dump_map(this->header);
         write(this->sockfd, h.c_str(), strlen(h.c_str()));
     }
 }
@@ -125,10 +123,8 @@ void Response::send(int code) {
     if (this->code == HTTP_301_MOVED && uri)
         header["Location"] = this->uri->src();
     
-    std::string s = "HTTP/1.1 " + to_string(this->code) + " " +
-    getTitle(this->code) + "\n";
-    write(this->sockfd, s.c_str(), strlen(s.c_str()));
-    std::string h = Utils::dump_map(this->header);
+    std::string h = "HTTP/1.1 " + to_string(this->code) + " " +
+        getTitle(this->code) + "\n" + Utils::dump_map(this->header);
     write(this->sockfd, h.c_str(), strlen(h.c_str()));
 }
 
