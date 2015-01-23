@@ -26,7 +26,8 @@ an example config file (`.fconfig`) for frostbite configuration is as follows:
             "connections": 64                           // max concurrent connections
         }
     ]
-}```
+}
+```
 
 
 ## Version
