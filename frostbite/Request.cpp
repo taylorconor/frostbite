@@ -25,10 +25,8 @@ int Request::parse() {
         else {
             index = line.find(':', 0);
             if(index != std::string::npos) {
-                header.insert(std::make_pair(
-                    boost::algorithm::trim_copy(line.substr(0, index)),
-                    boost::algorithm::trim_copy(line.substr(index + 1))
-                ));
+                header[boost::algorithm::trim_copy(line.substr(0, index))] =
+                    boost::algorithm::trim_copy(line.substr(index + 1));
             }
         }
     }
