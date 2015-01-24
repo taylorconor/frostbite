@@ -19,6 +19,7 @@ class URI {
 private:
     void configure();
     std::string source;
+    std::string args;
     std::string extension;
     struct stat s;
     int fileStatus;

@@ -9,7 +9,7 @@
 #include "URI.h"
 
 std::string URI::src() {
-    return this->source;
+    return source;
 }
 
 std::string URI::ext() {
@@ -41,6 +41,16 @@ void URI::configure() {
 
 URI::URI(std::string source) {
     this->source = source;
+    std::string::size_type index;
+    index = source.find('?', 0);
+    if(index != std::string::npos) {
+        this->source = source.substr(0, index);
+        this->args = source.substr(index + 1);
+    }
+    else {
+        this->source = source;
+        this->args = "";
+    }
     this->configure();
 }
 
