@@ -42,10 +42,13 @@ private:
     
     int port;
     int parseStatus;
+    std::string config;
     std::vector<Host *> hosts;
     
 public:
     static Server *getInstance();
+    
+    void setConfig(std::string);
     
     void listen();
     int getParseStatus();

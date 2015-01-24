@@ -29,9 +29,7 @@ void Server::dispatch(Request *req, int newsockfd) {
 
 int Server::parseConfigFile() {
     ifstream file;
-    // TODO: move config files to /etc as a standard, and add option to pass
-    // config file location into the binary as a parameter
-    file.open("/Users/Conor/Documents/Projects/frostbite/srv/.fconfig");
+    file.open(config);
     if (!file) {
         return 0;
     }
@@ -206,13 +204,16 @@ void Server::initServer() {
 }
 
 void Server::listen() {
-    initServer();
-}
-
-Server::Server() {
     this->parseStatus = parseConfigFile();
+    if (this->parseStatus)
+        initServer();
 }
 
+void Server::setConfig(std::string config) {
+    this->config = config;
+}
+
+Server::Server() {}
 Server *Server::getInstance() {
     if (instance == NULL) {
         instance = new Server();

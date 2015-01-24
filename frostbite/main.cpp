@@ -9,9 +9,11 @@
 #include <iostream>
 #include "Server.h"
 
+#define DEFAULT_CONFIG  "/etc/frostbite/.fconfig"
+
 int main(int argc, const char * argv[]) {
     Server *s = Server::getInstance();
-    if (s->getParseStatus())
-        s->listen();
+    s->setConfig(DEFAULT_CONFIG);
+    s->listen();
     return 0;
 }
