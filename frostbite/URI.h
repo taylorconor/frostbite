@@ -11,20 +11,24 @@
 
 #include <stdio.h>
 #include <string>
+#include <map>
 #include <sys/stat.h>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
 class URI {
 private:
-    void configure();
     std::string source;
     std::string args;
     std::string extension;
+    std::string mime_type;
     struct stat s;
     int fileStatus;
+    static std::map<std::string, std::string> mime_map;
     
+    void configure();
     std::string processExt(std::string);
+    std::string processMIME(std::string);
 public:
     URI();
     URI(std::string);
@@ -35,6 +39,7 @@ public:
     bool isEmpty();
     std::string src();
     std::string ext();
+    std::string mime();
     std::string cleanExt();
     std::string parentDir();
 };

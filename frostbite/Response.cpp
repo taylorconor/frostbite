@@ -17,6 +17,9 @@ int Response::writeFile() {
         
     ifstream file;
     file.open(uri->src());
+    std::string mime_type = uri->mime();
+    if (mime_type.length() > 0)
+        header["Content-Type"] = mime_type;
     if (!file) {
         return HTTP_404_NOT_FOUND;
     }
