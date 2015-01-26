@@ -207,6 +207,8 @@ void Server::listen() {
     this->parseStatus = parseConfigFile();
     if (this->parseStatus)
         initServer();
+    else
+        cout << "error parsing config file" << endl;
 }
 
 void Server::setConfig(std::string config) {

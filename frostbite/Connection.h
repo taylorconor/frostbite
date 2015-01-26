@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <mutex>
 
 #include "Request.h"
 #include "Response.h"

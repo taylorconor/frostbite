@@ -6,6 +6,10 @@
 //  Copyright (c) 2014 Frostplant. All rights reserved.
 //
 
+#ifndef SO_NOSIGPIPE
+#define SO_NOSIGPIPE    MSG_NOSIGNAL
+#endif
+
 #ifndef __frostbite__Server__
 #define __frostbite__Server__
 
