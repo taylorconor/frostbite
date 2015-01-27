@@ -97,11 +97,12 @@ void Connection::handleConnection() {
     std::string method = this->req->getRequestMethod();
     
     // TODO: implement other HTTP methods
-    if (method == "GET") {
+    if (method.compare("GET") == 0) {
         this->res = new Response(uri, this->sockfd);
         this->res->send(u->status);
     }
     else {
+        cout << "client requesting method " << method << endl;
         this->res = new Response(this->sockfd);
         this->res->send(HTTP_405_METHOD_NOT_ALLOWED);
         delete uri;
