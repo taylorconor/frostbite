@@ -34,6 +34,17 @@
 #define DEFAULT_CONNECTIONS 256
 #define MAX_ACCEPT_ATTEMPTS 10
 
+#define MAX_PROXY_CONNS     64
+
+#define PROXY_OFF           0
+#define PROXY_OTHERS        1
+#define PROXY_ALL           2
+
+struct proxyStatus {
+    int status;
+    int connections;
+};
+
 class Server {
 private:
     static Server *instance;
@@ -45,6 +56,7 @@ private:
     int parseConfigFile();
     
     int port;
+    proxyStatus proxy;
     int parseStatus;
     std::string config;
     std::vector<Host *> hosts;

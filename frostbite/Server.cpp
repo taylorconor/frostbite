@@ -50,6 +50,35 @@ int Server::parseConfigFile() {
         }
         this->port = document["port"].GetInt();
         
+        if (document.HasMember("proxy") && document["proxy"].IsObject()) {
+            if (document["proxy"].HasMember("status") &&
+                document["proxy"]["status"].IsString()) {
+                std::string p = document["proxy"]["status"].GetString();
+                if (p.compare("off") == 0)
+                    proxy.status = PROXY_OFF;
+                else if (p.compare("others") == 0)
+                    proxy.status = PROXY_OTHERS;
+                else if (p.compare("all") == 0)
+                    proxy.status = PROXY_ALL;
+                else
+                    proxy.status = PROXY_OFF;
+            }
+            else {
+                proxy.status = PROXY_OFF;
+            }
+            
+            if (document["proxy"].HasMember("connections") &&
+                document["proxy"]["connections"].IsInt()) {
+                proxy.connections = document["proxy"]["connections"].GetInt();
+            }
+            else {
+                proxy.connections = MAX_PROXY_CONNS;
+            }
+        }
+        else {
+            proxy.status = PROXY_OFF;
+        }
+        
         if (!document.HasMember("hosts") || !document["hosts"].IsArray()) {
             cout << "ERROR: Config file: member \"hosts\" missing or " <<
                 "non-array value" << endl;
