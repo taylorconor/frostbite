@@ -12,9 +12,6 @@
 
 std::mutex *Connection::mtx = new std::mutex();
 
-#define ERR_RESPONSE    this->res = new Response(this->sockfd); \
-                        this->res->send(HTTP_500_INTERNAL_ERR); \
-
 // TODO: abstract this to the config file
 std::vector<std::string> defaultFiles =
     {"index.html", "index.htm", "index.php", "index.php3", "index.php4",
@@ -80,7 +77,7 @@ void Connection::printStatus() {
         output += "OK\t";
     
     output += std::to_string(code)+"\t"+this->req->getRequestMethod()+"\t"+
-    this->req->getRequestURI()+"\n";
+        this->req->getRequestURI()+"\n";
     
     mtx->lock();
     cout << output;
@@ -116,7 +113,8 @@ void Connection::handleConnection() {
 
 Connection::~Connection() {
     delete req;
-    delete res;
+    if (res != nullptr)
+        delete res;
 }
 Connection::Connection() {}
 Connection::Connection(Request *req, int sockfd, std::string location) {

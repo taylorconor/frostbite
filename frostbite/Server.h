@@ -25,6 +25,7 @@
 #include "rapidjson/document.h"
 
 #include "Host.h"
+#include "ProxyHost.h"
 #include "Hostname.h"
 #include "Request.h"
 #include "Response.h"
@@ -43,6 +44,7 @@
 struct proxyStatus {
     int status;
     int connections;
+    Host *host;
 };
 
 class Server {

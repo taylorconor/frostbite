@@ -40,6 +40,7 @@ public:
     std::string getRequestURI();
     std::string getRequestHTTP();
     std::string getRequestParam(std::string);
+    std::string getSource();
     bool isValid();
 };
 

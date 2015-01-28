@@ -20,6 +20,9 @@
 #include "Response.h"
 #include "URI.h"
 
+#define ERR_RESPONSE    this->res = new Response(this->sockfd); \
+                        this->res->send(HTTP_500_INTERNAL_ERR); \
+
 class abs_uri {
 public:
     int status;
@@ -31,7 +34,7 @@ public:
 };
 
 class Connection {
-private:
+protected:
     abs_uri *getAbsoluteURI();
     void printStatus();
     
@@ -52,7 +55,7 @@ public:
     int getSockfd();
     std::string getRequestName();
     
-    void handleConnection();
+    virtual void handleConnection();
 };
 
 #endif /* defined(__frostbite__Connection__) */

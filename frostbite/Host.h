@@ -23,8 +23,8 @@
 #include "Utils.h"
 
 class Host {
-private:
-    void watchPool();
+protected:
+    virtual void watchPool();
     
     Hostname *hostname;
     std::string location;
@@ -40,7 +40,7 @@ public:
     Host();
     Host(Hostname *, std::string, int);
     
-    void handleRequest(Request *, int);
+    virtual void handleRequest(Request *, int);
 
     Hostname *getHostname();
 };

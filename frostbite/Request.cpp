@@ -56,6 +56,10 @@ std::string Request::getRequestParam(std::string param) {
     return header[param];
 }
 
+std::string Request::getSource() {
+    return source;
+}
+
 bool Request::isValid() {
     return (this->parseStatus >= 0);
 }

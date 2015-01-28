@@ -14,7 +14,10 @@ Server *Server::instance = nullptr;
 void Server::dispatch(Request *req, int newsockfd) {
     std::string reqHost = req->getRequestParam("Host");
     bool handled = false;
-    for (int i = 0; i < hosts.size(); i++) {
+    if (proxy.status == PROXY_ALL) {
+        proxy.host->handleRequest(req, newsockfd);
+    }
+    for (int i = 0; i < hosts.size() && !handled; i++) {
         Hostname *h = hosts[i]->getHostname();
         if (h->contains(reqHost)) {
             hosts[i]->handleRequest(req, newsockfd);
@@ -22,9 +25,14 @@ void Server::dispatch(Request *req, int newsockfd) {
             break;
         }
     }
-    // delete any unhandled requests to stop them from being leaked
-    if (!handled)
-        delete req;
+    // if no proxying is being used, delete any unhandled requests to stop them
+    // from being leaked
+    if (!handled) {
+        if (proxy.status == PROXY_OTHERS)
+            proxy.host->handleRequest(req, newsockfd);
+        else
+            delete req;
+    }
 }
 
 int Server::parseConfigFile() {
@@ -222,6 +230,10 @@ void Server::initServer() {
     // try to bind to the port
     if (::bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         Utils::error("ERROR on binding");
+    
+    // initialise proxy host
+    if (proxy.status != PROXY_OFF)
+        proxy.host = new ProxyHost(proxy.connections);
     
     cout << "frostbite server listening on port " << this->port << endl;
     
