@@ -176,7 +176,7 @@ void Server::initListen(int sockfd) {
     ::listen(sockfd,5);
     clilen = sizeof(cli_addr);
     
-    bzero(buffer,256);
+    bzero(buffer, RECBUF);
     
     while (1) {
         newsockfd = -1;
@@ -187,7 +187,7 @@ void Server::initListen(int sockfd) {
                              +std::to_string(MAX_ACCEPT_ATTEMPTS)
                              +"attempts");
         }
-        bzero(buffer,256);
+        bzero(buffer, RECBUF);
         n = read(newsockfd,buffer,RECBUF-1);
         if (n < 0)
             Utils::error("ERROR reading from socket");
