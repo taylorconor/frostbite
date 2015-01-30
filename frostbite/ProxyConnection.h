@@ -10,15 +10,17 @@
 #define __frostbite__ProxyConnection__
 
 #include <stdio.h>
-#include <curl/curl.h>
+#include <netdb.h>
+#include <fcntl.h>
 
+#include "Utils.h"
+#include "Socket.h"
 #include "Connection.h"
 #include "Response.h"
 
 class ProxyConnection : public Connection {
 private:
 public:
-    static size_t writer(char *, size_t, size_t, void *);
     ProxyConnection(Request *, int);
     void handleConnection();
 };

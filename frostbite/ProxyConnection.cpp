@@ -8,53 +8,50 @@
 
 #include "ProxyConnection.h"
 
-size_t ProxyConnection::writer(char *s, size_t size, size_t nmemb, void *f) {
-    ProxyConnection *ptr = (ProxyConnection *)f;
-    
-    long status = write(ptr->sockfd, s, nmemb);
-    if (status < 0) {
-        cout << "Error: Unable to write to socket "
-            << ptr->sockfd << "; " << strerror(errno) << endl;
-    }
-    
-    return size * nmemb;
-}
-
 void ProxyConnection::handleConnection() {
     if (!this->req->isValid()) {
         ERR_RESPONSE;
         return;
     }
     
-    cout << "Handling proxy request for: " << req->getRequestURI() << " with method " << req->getRequestMethod() << endl;
+    cout << "Proxy " << req->getRequestMethod() << " " <<
+        req->getRequestURI() << endl;
     
-    CURL *curl;
-    CURLcode res;
-    struct curl_slist *headers=NULL;
-    std::ifstream  fin(req->getSource());
-    std::string    file_line;
-    while(std::getline(fin, file_line)) {
-        curl_slist_append(headers, file_line.c_str());
+    std::string host = req->getRequestParam("Host");
+    ssize_t n;
+    int srv_sockfd = Socket::openSocket(host, 80);
+    fcntl(srv_sockfd, F_SETFL, O_NONBLOCK);
+    
+    struct timeval tv;
+    fd_set readfds;
+    
+    tv.tv_sec = 2;
+    tv.tv_usec = 500000;
+    
+    FD_ZERO(&readfds);
+    FD_SET(srv_sockfd, &readfds);
+    
+    char buf[MAX_BUF];
+    
+    std::string data = req->getSource();
+    n = write(srv_sockfd, data.c_str(), strlen(data.c_str()));
+    if (n < 0)
+        Utils::error("ERROR sending data");
+    
+    select(srv_sockfd+1, &readfds, NULL, NULL, &tv);
+    
+    while ((n = read(srv_sockfd, buf, MAX_BUF)) > 0) {
+        buf[n] = '\0';
+        n = write(sockfd, buf, n);
+        if (n < 0)
+            Utils::error("ERROR sending data");
+        select(srv_sockfd+1, &readfds, NULL, NULL, &tv);
     }
+    perror("ERROR on read");
     
-    curl = curl_easy_init();
-    if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, req->getRequestURI().c_str());
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-        curl_easy_setopt(curl, CURLOPT_WRITEHEADER, writer);
-        curl_easy_setopt(curl, CURLOPT_HEADERDATA, this);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
-        
-        res = curl_easy_perform(curl);
-        if(res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                    curl_easy_strerror(res));
-        
-        curl_easy_cleanup(curl);
-    }
-    
+    close(srv_sockfd);
+    cout << "Done  " << req->getRequestMethod() << " " <<
+        req->getRequestURI() << endl;
     this->completed = true;
 }
 
