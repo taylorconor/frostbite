@@ -53,7 +53,10 @@ std::string Request::getRequestHTTP() {
 }
 
 std::string Request::getRequestParam(std::string param) {
-    return header[param];
+    if (header.find(param) != header.end())
+        return header.at(param);
+    else
+        return "";
 }
 
 std::string Request::getSource() {
