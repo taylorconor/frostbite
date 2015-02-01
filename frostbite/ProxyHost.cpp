@@ -15,26 +15,6 @@ void ProxyHost::handleRequest(Request *req, int sockfd) {
     cv_watcher->notify_one();
 }
 
-void ProxyHost::watchPool() {
-    while (shouldWatch) {
-        // create a unique lock for the condition variable to wait on
-        std::unique_lock<std::mutex> lck(mtx_watcher);
-        
-        // immediately wait on cv_watcher until pool requests this thread
-        cv_watcher->wait(lck);
-        
-        // take an item from the pool
-        mtx_pool.lock();
-        Connection *item = pool.front();
-        pool.pop();
-        mtx_pool.unlock();
-        
-        item->handleConnection();
-        close(item->getSockfd());
-        delete item;
-    }
-}
-
 ProxyHost::ProxyHost(int threads) {
     this->threads = threads;
     this->shouldWatch = true;
