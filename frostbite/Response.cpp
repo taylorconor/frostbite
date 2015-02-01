@@ -15,7 +15,7 @@ int Response::writeFile() {
     if (!uri || this->uri->isEmpty())
         return HTTP_500_INTERNAL_ERR;
         
-    ifstream file;
+    std::ifstream file;
     file.open(uri->src());
     std::string mime_type = uri->mime();
     if (mime_type.length() > 0)
@@ -27,7 +27,7 @@ int Response::writeFile() {
         const char *h = ("HTTP/1.1 200 OK\n" +
                          Utils::dump_map(this->header) + "\n").c_str();
         if (write(this->sockfd, h, strlen(h)) < 0) {
-            cout << "Error: Unable to write to socket " << this->sockfd << endl;
+            std::cout << "Error: Unable to write to socket " << this->sockfd << std::endl;
             return HTTP_500_INTERNAL_ERR;
         }
         
@@ -45,8 +45,8 @@ int Response::writeFile() {
         while (fgets(buf, MAX_BUF-1, fp) != NULL) {
             long status = write(this->sockfd, buf, strlen(buf));
             if (status < 0) {
-                cout << "Error: Unable to write to socket "
-                    << this->sockfd << "; " << strerror(errno) << endl;
+                std::cout << "Error: Unable to write to socket "
+                    << this->sockfd << "; " << strerror(errno) << std::endl;
                 pclose(fp);
                 delete[] buf;
                 return HTTP_500_INTERNAL_ERR;
@@ -60,7 +60,7 @@ int Response::writeFile() {
         const char *h = ("HTTP/1.1 200 OK\n" +
                          Utils::dump_map(this->header) + "\n").c_str();
         if (write(this->sockfd, h, strlen(h)) < 0) {
-            cout << "Error: Unable to write to socket " << this->sockfd << endl;
+            std::cout << "Error: Unable to write to socket " << this->sockfd << std::endl;
             return HTTP_500_INTERNAL_ERR;
         }
         
@@ -70,8 +70,8 @@ int Response::writeFile() {
             file.read(buf, MAX_BUF);
             long status = write(this->sockfd, buf, file.gcount());
             if (status < 0) {
-                cout << "Error: Unable to write to socket "
-                    << this->sockfd << "; " << strerror(errno) << endl;
+                std::cout << "Error: Unable to write to socket "
+                    << this->sockfd << "; " << strerror(errno) << std::endl;
                 delete[] buf;
                 return HTTP_500_INTERNAL_ERR;
             }
@@ -105,7 +105,7 @@ void Response::send() {
     this->code = writeFile();
     
     if (this->code != HTTP_200_OK) {
-        std::string h = "HTTP/1.1 " + to_string(this->code) + " " +
+        std::string h = "HTTP/1.1 " + std::to_string(this->code) + " " +
             getTitle(this->code) + "\n" + Utils::dump_map(this->header);
         write(this->sockfd, h.c_str(), strlen(h.c_str()));
     }
@@ -126,7 +126,7 @@ void Response::send(int code) {
     if (this->code == HTTP_301_MOVED && uri)
         header["Location"] = this->uri->src();
     
-    std::string h = "HTTP/1.1 " + to_string(this->code) + " " +
+    std::string h = "HTTP/1.1 " + std::to_string(this->code) + " " +
         getTitle(this->code) + "\n" + Utils::dump_map(this->header);
     write(this->sockfd, h.c_str(), strlen(h.c_str()));
 }

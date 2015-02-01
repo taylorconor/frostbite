@@ -80,7 +80,7 @@ void Connection::printStatus() {
         this->req->getRequestURI()+"\n";
     
     mtx->lock();
-    cout << output;
+    std::cout << output;
     mtx->unlock();
 }
 
@@ -99,7 +99,7 @@ void Connection::handleConnection() {
         this->res->send(u->status);
     }
     else {
-        cout << "client requesting method " << method << endl;
+        std::cout << "client requesting method " << method << std::endl;
         this->res = new Response(this->sockfd);
         this->res->send(HTTP_405_METHOD_NOT_ALLOWED);
         delete uri;

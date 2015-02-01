@@ -22,13 +22,11 @@
 
 #include "Utils.h"
 
-using namespace std;
-
 class Request {
 private:
     int parse();
     
-    map<std::string,std::string> header;
+    std::map<std::string,std::string> header;
     std::string source;
     int parseStatus;
     
