@@ -21,13 +21,12 @@ void Host::watchPool() {
         std::unique_lock<std::mutex> lck(mtx_watcher);
         
         // immediately wait on cv_watcher until pool requests this thread
-        cv_watcher->wait(lck);
+        cv_watcher->wait(lck, [this](){return !pool.empty();});
         
         // take an item from the pool
-        mtx_pool.lock();
         Connection *item = pool.front();
         pool.pop();
-        mtx_pool.unlock();
+        lck.release()->unlock();
         
         item->handleConnection();
         close(item->getSockfd());

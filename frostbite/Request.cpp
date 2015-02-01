@@ -19,7 +19,7 @@ int Request::parse() {
             if (parts.size() == 3) {
                 header["request-method"] = parts[0];
                 header["request-uri"] = parts[1];
-                header["request-http"] = parts[2];
+                header["request-http"] = parts[2].substr(0,parts[2].length()-1);
             }
         }
         else {
@@ -53,7 +53,14 @@ std::string Request::getRequestHTTP() {
 }
 
 std::string Request::getRequestParam(std::string param) {
-    return header[param];
+    if (header.find(param) != header.end())
+        return header.at(param);
+    else
+        return "";
+}
+
+std::string Request::getSource() {
+    return source;
 }
 
 bool Request::isValid() {

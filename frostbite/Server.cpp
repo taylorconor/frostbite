@@ -14,7 +14,10 @@ Server *Server::instance = nullptr;
 void Server::dispatch(Request *req, int newsockfd) {
     std::string reqHost = req->getRequestParam("Host");
     bool handled = false;
-    for (int i = 0; i < hosts.size(); i++) {
+    if (proxy.status == PROXY_ALL) {
+        proxy.host->handleRequest(req, newsockfd);
+    }
+    for (int i = 0; i < hosts.size() && !handled; i++) {
         Hostname *h = hosts[i]->getHostname();
         if (h->contains(reqHost)) {
             hosts[i]->handleRequest(req, newsockfd);
@@ -22,13 +25,18 @@ void Server::dispatch(Request *req, int newsockfd) {
             break;
         }
     }
-    // delete any unhandled requests to stop them from being leaked
-    if (!handled)
-        delete req;
+    // if no proxying is being used, delete any unhandled requests to stop them
+    // from being leaked
+    if (!handled) {
+        if (proxy.status == PROXY_OTHERS)
+            proxy.host->handleRequest(req, newsockfd);
+        else
+            delete req;
+    }
 }
 
 int Server::parseConfigFile() {
-    ifstream file;
+    std::ifstream file;
     file.open(config);
     if (!file) {
         return 0;
@@ -44,27 +52,56 @@ int Server::parseConfigFile() {
         
         // get port details
         if (!document.HasMember("port") || !document["port"].IsInt()) {
-            cout << "ERROR: Config file: member \"port\" missing or " <<
-                "non-int value" << endl;
+            std::cout << "ERROR: Config file: member \"port\" missing or " <<
+                "non-int value" << std::endl;
             return 0;
         }
         this->port = document["port"].GetInt();
         
+        if (document.HasMember("proxy") && document["proxy"].IsObject()) {
+            if (document["proxy"].HasMember("status") &&
+                document["proxy"]["status"].IsString()) {
+                std::string p = document["proxy"]["status"].GetString();
+                if (p.compare("off") == 0)
+                    proxy.status = PROXY_OFF;
+                else if (p.compare("others") == 0)
+                    proxy.status = PROXY_OTHERS;
+                else if (p.compare("all") == 0)
+                    proxy.status = PROXY_ALL;
+                else
+                    proxy.status = PROXY_OFF;
+            }
+            else {
+                proxy.status = PROXY_OFF;
+            }
+            
+            if (document["proxy"].HasMember("connections") &&
+                document["proxy"]["connections"].IsInt()) {
+                proxy.connections = document["proxy"]["connections"].GetInt();
+            }
+            else {
+                proxy.connections = MAX_PROXY_CONNS;
+            }
+        }
+        else {
+            proxy.status = PROXY_OFF;
+        }
+        
         if (!document.HasMember("hosts") || !document["hosts"].IsArray()) {
-            cout << "ERROR: Config file: member \"hosts\" missing or " <<
-                "non-array value" << endl;
+            std::cout << "ERROR: Config file: member \"hosts\" missing or " <<
+                "non-array value" << std::endl;
             return 0;
         }
         
         for (rapidjson::SizeType i = 0; i < document["hosts"].Size(); i++) {
             if (!document["hosts"][i].HasMember("hostnames")) {
-                cout << "ERROR: Config file: member \"hostnames\" missing " <<
-                    "for host number " << i << endl;
+                std::cout << "ERROR: Config file: member \"hostnames\" missing " <<
+                    "for host number " << i << std::endl;
                 return 0;
             }
             if (!document["hosts"][i].HasMember("location")) {
-                cout << "ERROR: Config file: member \"location\" missing " <<
-                "for host number " << i << endl;
+                std::cout << "ERROR: Config file: member \"location\" missing " <<
+                "for host number " << i << std::endl;
                 return 0;
             }
             
@@ -83,9 +120,9 @@ int Server::parseConfigFile() {
                      j < document["hosts"][i]["hostnames"].Size(); j++) {
                     
                     if (!document["hosts"][i]["hostnames"][j].IsString()) {
-                        cout << "ERROR: Config file: expected \"hostnames\" " <<
+                        std::cout << "ERROR: Config file: expected \"hostnames\" " <<
                             "in \"hosts\" to be of type String or array of " <<
-                            "Strings" << endl;
+                            "Strings" << std::endl;
                         return 0;
                     }
                     h.push_back(document["hosts"][i]["hostnames"][j]
@@ -96,9 +133,9 @@ int Server::parseConfigFile() {
                 h.push_back(document["hosts"][i]["hostnames"].GetString());
             }
             else {
-                cout << "ERROR: Config file: expected \"hostnames\" " <<
+                std::cout << "ERROR: Config file: expected \"hostnames\" " <<
                     "in \"hosts\" to be of type String or array of " <<
-                    "Strings for host number " << i << endl;
+                    "Strings for host number " << i << std::endl;
                 return 0;
             }
             
@@ -109,9 +146,9 @@ int Server::parseConfigFile() {
                     l += '/';
             }
             else {
-                cout << "ERROR: Config file: expected \"location\" " <<
+                std::cout << "ERROR: Config file: expected \"location\" " <<
                     "in \"hosts\" to be of type String for host number " <<
-                    i << endl;
+                    i << std::endl;
                 return 0;
             }
             
@@ -139,7 +176,7 @@ void Server::initListen(int sockfd) {
     ::listen(sockfd,5);
     clilen = sizeof(cli_addr);
     
-    bzero(buffer,256);
+    bzero(buffer, RECBUF);
     
     while (1) {
         newsockfd = -1;
@@ -150,7 +187,7 @@ void Server::initListen(int sockfd) {
                              +std::to_string(MAX_ACCEPT_ATTEMPTS)
                              +"attempts");
         }
-        bzero(buffer,256);
+        bzero(buffer, RECBUF);
         n = read(newsockfd,buffer,RECBUF-1);
         if (n < 0)
             Utils::error("ERROR reading from socket");
@@ -163,7 +200,7 @@ void Server::initListen(int sockfd) {
         int s = 1;
         setsockopt(newsockfd, SOL_SOCKET, SO_NOSIGPIPE, (void*)&s, sizeof(int));
         
-        Request *req = new Request(string(buffer));
+        Request *req = new Request(std::string(buffer));
         dispatch(req, newsockfd);
     }
 }
@@ -194,7 +231,11 @@ void Server::initServer() {
     if (::bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         Utils::error("ERROR on binding");
     
-    cout << "frostbite server listening on port " << this->port << endl;
+    // initialise proxy host
+    if (proxy.status != PROXY_OFF)
+        proxy.host = new ProxyHost(proxy.connections);
+    
+    std::cout << "frostbite server listening on port " << this->port << std::endl;
     
     // begin server listening
     initListen(sockfd);
@@ -208,7 +249,7 @@ void Server::listen() {
     if (this->parseStatus)
         initServer();
     else
-        cout << "error parsing config file" << endl;
+        std::cout << "error parsing config file" << std::endl;
 }
 
 void Server::setConfig(std::string config) {
