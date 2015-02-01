@@ -9,30 +9,42 @@
 #include "Socket.h"
 
 int Socket::openSocket(std::string host, int port) {
-    // begin by opening socket
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0)
-        Utils::error("ERROR opening socket");
+    addrinfo host_info;
+    addrinfo *host_info_list;
+    int proxy_sockfd;
+    ssize_t n;
+    char portbuf[MAX_PORT_SIZE];
     
-    struct sockaddr_in serv_addr;
+    // ensure it's initialised to zero
+    memset(&host_info, 0, sizeof host_info);
     
-    // retrieve hostname of host
-    struct hostent *server = gethostbyname(host.c_str());
-    if (server == NULL) {
-        fprintf(stderr,"ERROR, no such host\n");
-        exit(0);
+    host_info.ai_family = AF_INET;
+    host_info.ai_socktype = SOCK_STREAM;
+    
+    // convert port to c_str so it can be used for getaddrinfo
+    sprintf(portbuf, "%i", port);
+    n = getaddrinfo(host.c_str(), portbuf,
+                    &host_info, &host_info_list);
+    if (n == -1) {
+        Utils::error("ERROR on getaddrinfo");
+        return -1;
     }
     
-    bzero((char *) &serv_addr, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    bcopy((char *)server->h_addr,
-          (char *)&serv_addr.sin_addr.s_addr,
-          server->h_length);
-    serv_addr.sin_port = htons(port);
+    proxy_sockfd = socket(host_info_list->ai_family,
+                          host_info_list->ai_socktype,
+                          host_info_list->ai_protocol);
     
-    if (connect(sockfd,(struct sockaddr *)&serv_addr,
-                sizeof(serv_addr))< 0)
-        Utils::error("ERROR connecting");
+    if (proxy_sockfd == -1) {
+        Utils::error("ERROR creating socket");
+        return -1;
+    }
     
-    return sockfd;
+    n = connect(proxy_sockfd, host_info_list->ai_addr,
+                host_info_list->ai_addrlen);
+    if (n == -1) {
+        std::cout << "ERROR connecting to socket" << std::endl;
+        return -1;
+    }
+    
+    return proxy_sockfd;
 }

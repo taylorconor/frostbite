@@ -19,6 +19,8 @@
 
 #include "Utils.h"
 
+#define MAX_PORT_SIZE   20
+
 class Socket {
 public:
     static int openSocket(std::string host, int port);
