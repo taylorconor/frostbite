@@ -20,9 +20,10 @@
 
 class ProxyConnection : public Connection {
 private:
+    char *recbuf;
 public:
     ProxyConnection(Request *, int);
-    void handleConnection();
+    void handleConnection() override;
 };
 
 #endif /* defined(__frostbite__ProxyConnection__) */

@@ -14,44 +14,32 @@ void ProxyConnection::handleConnection() {
         return;
     }
     
-    cout << "Proxy " << req->getRequestMethod() << " " <<
-        req->getRequestURI() << endl;
-    
-    std::string host = req->getRequestParam("Host");
-    ssize_t n;
-    int srv_sockfd = Socket::openSocket(host, 80);
-    fcntl(srv_sockfd, F_SETFL, O_NONBLOCK);
-    
-    struct timeval tv;
-    fd_set readfds;
-    
-    tv.tv_sec = 2;
-    tv.tv_usec = 500000;
-    
-    FD_ZERO(&readfds);
-    FD_SET(srv_sockfd, &readfds);
-    
-    char buf[MAX_BUF];
-    
-    std::string data = req->getSource();
-    n = write(srv_sockfd, data.c_str(), strlen(data.c_str()));
-    if (n < 0)
-        Utils::error("ERROR sending data");
-    
-    select(srv_sockfd+1, &readfds, NULL, NULL, &tv);
-    
-    while ((n = read(srv_sockfd, buf, MAX_BUF)) > 0) {
-        buf[n] = '\0';
-        n = write(sockfd, buf, n);
-        if (n < 0)
-            Utils::error("ERROR sending data");
-        select(srv_sockfd+1, &readfds, NULL, NULL, &tv);
+    if (req->getRequestMethod().compare("GET") == 0) {
+        
+        int proxy_sockfd = Socket::openSocket(req->getRequestParam("Host"), 80);
+        if (proxy_sockfd != -1) {
+            std::cout << req->getRequestMethod() << " " << req->getRequestURI()
+                << " " << req->getRequestHTTP() << std::endl;
+            
+            // send the request to the destination server
+            send(proxy_sockfd, req->getSource().c_str(),
+                 req->getSource().length(), 0);
+            
+            struct timeval tv;
+            tv.tv_sec = 5;
+            tv.tv_usec = 0;
+            setsockopt(proxy_sockfd, SOL_SOCKET, SO_RCVTIMEO,
+                       (char *)&tv,sizeof(struct timeval));
+            
+            // receive the destination server's response, and send that back to
+            // the client
+            ssize_t n;
+            while ((n = recv(proxy_sockfd, recbuf, MAX_BUF, 0)) > 0) {
+                send(sockfd, recbuf, n, 0);
+            }
+        }
     }
-    perror("ERROR on read");
     
-    close(srv_sockfd);
-    cout << "Done  " << req->getRequestMethod() << " " <<
-        req->getRequestURI() << endl;
     this->completed = true;
 }
 
@@ -60,4 +48,5 @@ ProxyConnection::ProxyConnection(Request *req, int sockfd) {
     this->res = nullptr;
     this->sockfd = sockfd;
     this->completed = false;
+    this->recbuf = new char[MAX_BUF];
 }

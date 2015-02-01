@@ -15,9 +15,6 @@
 #include "ProxyConnection.h"
 
 class ProxyHost : public Host {
-private:
-    void watchPool() override;
-    
 public:
     void handleRequest(Request *, int) override;
     
