@@ -25,7 +25,7 @@ int Socket::openSocket(std::string host, int port) {
     sprintf(portbuf, "%i", port);
     n = getaddrinfo(host.c_str(), portbuf,
                     &host_info, &host_info_list);
-    if (n == -1) {
+    if (n == -1 || !host_info_list) {
         Utils::error("ERROR on getaddrinfo");
         return -1;
     }
