@@ -8,7 +8,7 @@
 
 #include "Socket.h"
 
-int Socket::openSocket(std::string host, int port) {
+int Socket::create(std::string host, int port) {
     addrinfo host_info;
     addrinfo *host_info_list;
     int proxy_sockfd;

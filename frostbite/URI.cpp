@@ -51,25 +51,25 @@ std::string URI::mime() {
     return this->mime_type;
 }
 
-std::string URI::cleanExt() {
-    std::string e = this->extension;
+std::string URI::clean_ext() {
+    std::string e = extension;
     if (e == ".phtml" || e.compare(0, 4, ".php") == 0)
         return ".php";
     return e;
 }
 
-std::string URI::parentDir() {
+std::string URI::parent_dir() {
     boost::filesystem::path p(this->source);
     std::string filename = p.filename().string();
     return this->source.substr(0, this->source.length() - filename.length());
 }
 
-std::string URI::processExt(std::string e) {
+std::string URI::process_ext(std::string e) {
     boost::algorithm::to_lower(e);
     return e;
 }
 
-std::string URI::processMIME(std::string e) {
+std::string URI::process_mime(std::string e) {
     // leave the mime type blank if it's not in the map. the caller will exclude
     // this field from the HTTP header.
     if (mime_map.count(e) == 0)
@@ -82,16 +82,16 @@ void URI::configure() {
     std::string::size_type index;
     index = source.find('?', 0);
     if(index != std::string::npos) {
-        this->source = source.substr(0, index);
-        this->args = source.substr(index + 1);
+        source = source.substr(0, index);
+        args = source.substr(index + 1);
     }
     else {
-        this->source = source;
-        this->args = "";
+        source = source;
+        args = "";
     }
-    this->fileStatus = stat(source.c_str(), &s);
-    this->extension = processExt(boost::filesystem::extension(this->source));
-    this->mime_type = processMIME(this->extension);
+    file_status = stat(source.c_str(), &s);
+    extension = process_ext(boost::filesystem::extension(source));
+    mime_type = process_mime(this->extension);
 }
 
 URI::URI(std::string source) {
@@ -100,23 +100,23 @@ URI::URI(std::string source) {
 }
 
 void URI::append(std::string suffix) {
-    this->source += suffix;
+    source += suffix;
     // must reconfigure after redefining the uri
-    this->configure();
+    configure();
 }
 
-bool URI::isValid() {
-    return (this->fileStatus == 0 || (!this->isDirectory() && !this->isFile()));
+bool URI::is_valid() {
+    return (file_status == 0 || (!is_directory() && !is_file()));
 }
 
-bool URI::isDirectory() {
+bool URI::is_directory() {
     return (s.st_mode & S_IFDIR);
 }
 
-bool URI::isFile() {
+bool URI::is_file() {
     return (s.st_mode & S_IFREG);
 }
 
-bool URI::isEmpty() {
-    return (this->source.length() == 0);
+bool URI::is_empty() {
+    return (source.length() == 0);
 }

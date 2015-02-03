@@ -10,9 +10,9 @@
 
 long status;
 
-int Response::writeFile() {
+int Response::write_file() {
     // uri doesn't *have* to be defined, but if it isn't there's a big problem
-    if (!uri || this->uri->isEmpty())
+    if (!uri || this->uri->is_empty())
         return HTTP_500_INTERNAL_ERR;
         
     std::ifstream file;
@@ -23,17 +23,18 @@ int Response::writeFile() {
     if (!file) {
         return HTTP_404_NOT_FOUND;
     }
-    else if (uri->cleanExt() == ".php") {
+    else if (uri->clean_ext() == ".php") {
         const char *h = ("HTTP/1.1 200 OK\n" +
-                         Utils::dump_map(this->header) + "\n").c_str();
+                         Utils::dump_map(header)+"\n").c_str();
         if (write(this->sockfd, h, strlen(h)) < 0) {
-            std::cout << "Error: Unable to write to socket " << this->sockfd << std::endl;
+            Utils::error("ERROR unable to write to socket " +
+                         std::to_string(sockfd));
             return HTTP_500_INTERNAL_ERR;
         }
         
         // make sure to execute the php script from its own parent directory,
         // for filesystem reference reasons
-        std::string cmd = "cd "+uri->parentDir()+" && php "+uri->src();
+        std::string cmd = "cd "+uri->parent_dir()+" && php "+uri->src();
         
         char *buf = new char[MAX_BUF];
         FILE *fp = popen(cmd.c_str(), "r");
@@ -45,8 +46,8 @@ int Response::writeFile() {
         while (fgets(buf, MAX_BUF-1, fp) != NULL) {
             long status = write(this->sockfd, buf, strlen(buf));
             if (status < 0) {
-                std::cout << "Error: Unable to write to socket "
-                    << this->sockfd << "; " << strerror(errno) << std::endl;
+                Utils::error("ERROR unable to write to socket " +
+                             std::to_string(sockfd));
                 pclose(fp);
                 delete[] buf;
                 return HTTP_500_INTERNAL_ERR;
@@ -60,7 +61,8 @@ int Response::writeFile() {
         const char *h = ("HTTP/1.1 200 OK\n" +
                          Utils::dump_map(this->header) + "\n").c_str();
         if (write(this->sockfd, h, strlen(h)) < 0) {
-            std::cout << "Error: Unable to write to socket " << this->sockfd << std::endl;
+            Utils::error("ERROR unable to write to socket " +
+                         std::to_string(sockfd));
             return HTTP_500_INTERNAL_ERR;
         }
         
@@ -70,8 +72,8 @@ int Response::writeFile() {
             file.read(buf, MAX_BUF);
             long status = write(this->sockfd, buf, file.gcount());
             if (status < 0) {
-                std::cout << "Error: Unable to write to socket "
-                    << this->sockfd << "; " << strerror(errno) << std::endl;
+                Utils::error("ERROR unable to write to socket " +
+                             std::to_string(sockfd));
                 delete[] buf;
                 return HTTP_500_INTERNAL_ERR;
             }
@@ -82,7 +84,7 @@ int Response::writeFile() {
     return HTTP_200_OK;
 }
 
-std::string Response::getTitle(int code) {
+std::string Response::title(int code) {
     switch (code) {
         case HTTP_200_OK:
             return HTTP_200_OK_STR;
@@ -102,20 +104,20 @@ std::string Response::getTitle(int code) {
 
 void Response::send() {
     // complete the response and get the response code
-    this->code = writeFile();
+    _code = write_file();
     
-    if (this->code != HTTP_200_OK) {
-        std::string h = "HTTP/1.1 " + std::to_string(this->code) + " " +
-            getTitle(this->code) + "\n" + Utils::dump_map(this->header);
-        write(this->sockfd, h.c_str(), strlen(h.c_str()));
+    if (_code != HTTP_200_OK) {
+        std::string h = "HTTP/1.1 " + std::to_string(_code) + " " +
+            title(_code) + "\n" + Utils::dump_map(header);
+        write(sockfd, h.c_str(), strlen(h.c_str()));
     }
 }
 
 void Response::send(int code) {
     // force response for the user-specified code
-    this->code = code;
+    this->_code = code;
     
-    if (this->code == HTTP_200_OK) {
+    if (_code == HTTP_200_OK) {
         // try to send using the normal send method
         send();
         return;
@@ -123,12 +125,12 @@ void Response::send(int code) {
     
     // a 301 Permenantly Moved status requires a location in its response so
     // the browser knows which page to resend its request to
-    if (this->code == HTTP_301_MOVED && uri)
+    if (_code == HTTP_301_MOVED && uri)
         header["Location"] = this->uri->src();
     
-    std::string h = "HTTP/1.1 " + std::to_string(this->code) + " " +
-        getTitle(this->code) + "\n" + Utils::dump_map(this->header);
-    write(this->sockfd, h.c_str(), strlen(h.c_str()));
+    std::string h = "HTTP/1.1 " + std::to_string(code) + " " +
+        title(code) + "\n" + Utils::dump_map(header);
+    write(sockfd, h.c_str(), strlen(h.c_str()));
 }
 
 Response::Response() {}
@@ -148,6 +150,6 @@ Response::Response(URI *uri, int sockfd) {
     header["Connection"] = "Keep-Alive";
 }
 
-int Response::getCode() {
-    return this->code;
+int Response::code() {
+    return _code;
 }

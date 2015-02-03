@@ -20,7 +20,7 @@
 #include "Response.h"
 #include "URI.h"
 
-#define ERR_RESPONSE    this->res = new Response(this->sockfd); \
+#define ERR_RESPONSE    this->res = new Response(_sockfd); \
                         this->res->send(HTTP_500_INTERNAL_ERR); \
 
 class abs_uri {
@@ -35,12 +35,12 @@ public:
 
 class Connection {
 protected:
-    abs_uri *getAbsoluteURI();
-    void printStatus();
+    abs_uri *absolute_uri();
+    virtual void print_status();
     
     Request *req;
     Response *res;
-    int sockfd;
+    int _sockfd;
     bool completed;
     std::string location;
     
@@ -51,11 +51,11 @@ public:
     ~Connection();
     Connection();
     Connection(Request *, int, std::string);
-    bool isCompleted();
-    int getSockfd();
-    std::string getRequestName();
+    bool is_completed();
+    int sockfd();
+    std::string request_name();
     
-    virtual void handleConnection();
+    virtual void handle_connection();
 };
 
 #endif /* defined(__frostbite__Connection__) */

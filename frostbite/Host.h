@@ -24,9 +24,9 @@
 
 class Host {
 protected:
-    virtual void watchPool();
+    virtual void watch_pool();
     
-    Hostname *hostname;
+    Hostname *_hostname;
     std::string location;
     std::queue<Connection *> pool;
     std::vector<std::thread *> thread_pool;
@@ -35,14 +35,14 @@ protected:
     std::mutex mtx_watcher;
     std::mutex mtx_pool;
     int threads;
-    bool shouldWatch;
+    bool should_watch;
 public:
     Host();
     Host(Hostname *, std::string, int);
     
-    virtual void handleRequest(Request *, int);
+    virtual void handle_request(Request *, int);
 
-    Hostname *getHostname();
+    Hostname *hostname();
 };
 
 #endif /* defined(__frostbite__Host__) */

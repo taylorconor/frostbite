@@ -12,8 +12,8 @@
 #define DEFAULT_CONFIG  "/etc/frostbite/.fconfig"
 
 int main(int argc, const char * argv[]) {
-    Server *s = Server::getInstance();
-    s->setConfig(DEFAULT_CONFIG);
+    Server *s = Server::instance();
+    s->set_config(DEFAULT_CONFIG);
     s->listen();
     return 0;
 }

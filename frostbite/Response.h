@@ -45,19 +45,19 @@
 
 class Response {
 private:
-    int writeFile();
-    std::string getTitle(int);
+    int write_file();
+    std::string title(int);
     
     std::map<std::string,std::string> header;
     int sockfd;
-    int code;
+    int _code;
     URI *uri;
 
 public:
     Response();
     Response(int);
     Response(URI *, int);
-    int getCode();
+    int code();
     void send();
     void send(int);
 };

@@ -27,19 +27,26 @@ private:
     int parse();
     
     std::map<std::string,std::string> header;
-    std::string source;
-    int parseStatus;
+    std::string _source;
+    std::string _protocol;
+    std::string _host;
+    int _status;
+    int _port;
     
 public:
     Request();
     Request(std::string);
     
-    std::string getRequestMethod();
-    std::string getRequestURI();
-    std::string getRequestHTTP();
-    std::string getRequestParam(std::string);
-    std::string getSource();
-    bool isValid();
+    std::string method();
+    std::string uri();
+    std::string http_version();
+    std::string param(std::string);
+    std::string source();
+    std::string protocol();
+    std::string host();
+    int port();
+    void set_param(std::string, std::string);
+    bool is_valid();
 };
 
 #endif /* defined(__frostbite__Request__) */

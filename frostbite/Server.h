@@ -49,27 +49,27 @@ struct proxyStatus {
 
 class Server {
 private:
-    static Server *instance;
+    static Server *_instance;
     Server();
     
-    void initServer();
-    void initListen(int);
+    void init_server();
+    void init_listen(int);
     void dispatch(Request *, int);
-    int parseConfigFile();
+    int parse_config();
     
     int port;
     proxyStatus proxy;
-    int parseStatus;
+    int _parse_status;
     std::string config;
     std::vector<Host *> hosts;
     
 public:
-    static Server *getInstance();
+    static Server *instance();
     
-    void setConfig(std::string);
+    void set_config(std::string);
     
     void listen();
-    int getParseStatus();
+    int parse_status();
 };
 
 #endif /* defined(__frostbite__Server__) */

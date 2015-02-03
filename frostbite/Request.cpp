@@ -9,7 +9,7 @@
 #include "Request.h"
 
 int Request::parse() {
-    std::istringstream f(source);
+    std::istringstream f(_source);
     std::string line;
     std::string::size_type index;
     for (int i = 0; std::getline(f, line) && line != "\r"; i++) {
@@ -19,14 +19,38 @@ int Request::parse() {
             if (parts.size() == 3) {
                 header["request-method"] = parts[0];
                 header["request-uri"] = parts[1];
+                
+                // TODO: implement smart URL parsing
+                /*size_t pos = parts[1].find(':');
+                if (pos != std::string::npos) {
+                    protocol = parts[1].substr(0,pos);
+                    boost::algorithm::to_lower(protocol);
+                    if (protocol.compare("https") == 0)
+                        port = 443;
+                    else
+                        port = 80;
+                }
+                else {
+                    // default to port 80 & http
+                    port = 80;
+                    protocol = "http";
+                }*/
+                _protocol = "http";
+                _port = 80;
+                
                 header["request-http"] = parts[2].substr(0,parts[2].length()-1);
             }
         }
         else {
             index = line.find(':', 0);
             if(index != std::string::npos) {
-                header[boost::algorithm::trim_copy(line.substr(0, index))] =
-                    boost::algorithm::trim_copy(line.substr(index + 1));
+                std::string i=boost::algorithm::trim_copy(line.substr(0,index));
+                std::string v=boost::algorithm::trim_copy(line.substr(index+1));
+                header[i] = v;
+                
+                // keep Host in it's own variable, since it's accessed so often
+                if (i.compare("Host") == 0)
+                    _host = v;
             }
         }
     }
@@ -35,34 +59,46 @@ int Request::parse() {
 }
 
 Request::Request(std::string r) {
-    this->source = r;
-    this->parseStatus = parse();
+    this->_source = r;
+    this->_status = parse();
 }
 Request::Request() {}
 
-std::string Request::getRequestMethod() {
+std::string Request::method() {
     return header["request-method"];
 }
 
-std::string Request::getRequestURI() {
+std::string Request::uri() {
     return header["request-uri"];
 }
 
-std::string Request::getRequestHTTP() {
+std::string Request::http_version() {
     return header["request-http"];
 }
 
-std::string Request::getRequestParam(std::string param) {
+std::string Request::param(std::string param) {
     if (header.find(param) != header.end())
         return header.at(param);
     else
         return "";
 }
 
-std::string Request::getSource() {
-    return source;
+std::string Request::source() {
+    return _source;
 }
 
-bool Request::isValid() {
-    return (this->parseStatus >= 0);
+std::string Request::host() {
+    return _host;
+}
+
+int Request::port() {
+    return _port;
+}
+
+void Request::set_param(std::string index, std::string val) {
+    header[index] = val;
+}
+
+bool Request::is_valid() {
+    return (_status >= 0);
 }

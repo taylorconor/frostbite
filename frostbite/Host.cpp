@@ -8,15 +8,15 @@
 
 #include "Host.h"
 
-void Host::handleRequest(Request *req, int sockfd) {
+void Host::handle_request(Request *req, int sockfd) {
     Connection *c = new Connection(req, sockfd, location);
     // add connection to the pool and notify the pool watcher thread
     pool.push(c);
     cv_watcher->notify_one();
 }
 
-void Host::watchPool() {
-    while (shouldWatch) {
+void Host::watch_pool() {
+    while (should_watch) {
         // create a unique lock for the condition variable to wait on
         std::unique_lock<std::mutex> lck(mtx_watcher);
         
@@ -28,24 +28,24 @@ void Host::watchPool() {
         pool.pop();
         lck.release()->unlock();
         
-        item->handleConnection();
-        close(item->getSockfd());
+        item->handle_connection();
+        close(item->sockfd());
         delete item;
     }
 }
 
 Host::Host() {}
 Host::Host(Hostname *hostname, std::string location, int threads) {
-    this->hostname = hostname;
+    this->_hostname = hostname;
     this->location = location;
-    this->shouldWatch = true;
+    this->should_watch = true;
     this->cv_watcher = new std::condition_variable();
     this->threads = threads;
     for (int i = 0; i < this->threads; i++) {
-        this->thread_pool.push_back(new std::thread(&Host::watchPool, this));
+        this->thread_pool.push_back(new std::thread(&Host::watch_pool, this));
     }
 }
 
-Hostname *Host::getHostname() {
-    return this->hostname;
+Hostname *Host::hostname() {
+    return this->_hostname;
 }

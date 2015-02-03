@@ -23,7 +23,7 @@
 
 class Socket {
 public:
-    static int openSocket(std::string host, int port);
+    static int create(std::string host, int port);
 };
 
 #endif /* defined(__frostbite__Socket__) */

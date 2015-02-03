@@ -16,7 +16,7 @@
 
 class ProxyHost : public Host {
 public:
-    void handleRequest(Request *, int) override;
+    void handle_request(Request *, int) override;
     
     ProxyHost(int);
 };
