@@ -26,7 +26,7 @@ void Host::watch_pool() {
         // take an item from the pool
         Connection *item = pool.front();
         pool.pop();
-        lck.release()->unlock();
+        lck.unlock();
         
         item->handle_connection();
         item->print_status();
