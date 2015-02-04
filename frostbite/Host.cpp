@@ -29,6 +29,7 @@ void Host::watch_pool() {
         lck.release()->unlock();
         
         item->handle_connection();
+        item->print_status();
         close(item->sockfd());
         delete item;
     }

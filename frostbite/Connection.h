@@ -36,7 +36,6 @@ public:
 class Connection {
 protected:
     abs_uri *absolute_uri();
-    virtual void print_status();
     
     Request *req;
     Response *res;
@@ -45,6 +44,7 @@ protected:
     std::string location;
     
 public:
+    virtual void print_status();
     std::thread *thread;
     static std::mutex *mtx;
     

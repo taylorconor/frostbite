@@ -112,7 +112,6 @@ void Connection::handle_connection() {
     }
     
     delete u;
-    print_status();
     completed = true;
 }
 
