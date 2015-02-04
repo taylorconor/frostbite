@@ -18,11 +18,20 @@
 #include "Connection.h"
 #include "Response.h"
 
+#define PSTATUS_INTERNAL_ERROR          -1
+#define PSTATUS_OK                      0
+#define PSTATUS_METHOD_NOT_SUPPORTED    1
+#define PSTATUS_SOCK_INIT_FAIL          2
+#define PSTATUS_SEND_FAIL               3
+
+#define OUTPUT_STR_LEN                  60
+
 class ProxyConnection : public Connection {
 private:
     char *recbuf;
-    void print_status() override;
+    int status;
 public:
+    void print_status() override;
     ProxyConnection(Request *, int);
     void handle_connection() override;
 };
