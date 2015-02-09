@@ -13,12 +13,18 @@
 
 #include "Host.h"
 #include "ProxyConnection.h"
+#include "Cache.h"
 
 class ProxyHost : public Host {
+private:
+    bool should_cache;
+    Cache *cache;
+    void watch_pool();
 public:
     void handle_request(Request *, int) override;
     
     ProxyHost(int);
+    ProxyHost(int, std::string);
 };
 
 #endif /* defined(__frostbite__ProxyHost__) */

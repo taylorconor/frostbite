@@ -60,13 +60,33 @@ void ProxyConnection::handle_connection() {
             
             // receive the destination server's response, and send that back to
             // the client
-            while ((n = recv(proxy_sockfd, recbuf, MAX_BUF, 0)) > 0) {
-                m = send(_sockfd, recbuf, n, 0);
-                if (m != n) {
-                    status = PSTATUS_SEND_FAIL;
-                    break;
+            if (should_cache) {
+                std::string hash = cache->hash(req->uri());
+                std::ofstream file;
+                file.open(cache->directory() + hash);
+                
+                while ((n = recv(proxy_sockfd, recbuf, MAX_BUF, 0)) > 0) {
+                    m = send(_sockfd, recbuf, n, 0);
+                    if (m != n) {
+                        status = PSTATUS_SEND_FAIL;
+                        break;
+                    }
+                    file.write(recbuf, n);
+                }
+                
+                file.close();
+                cache->insert(req->uri(), hash);
+            }
+            else {
+                while ((n = recv(proxy_sockfd, recbuf, MAX_BUF, 0)) > 0) {
+                    m = send(_sockfd, recbuf, n, 0);
+                    if (m != n) {
+                        status = PSTATUS_SEND_FAIL;
+                        break;
+                    }
                 }
             }
+            
             status = PSTATUS_OK;
         }
         else {
@@ -87,4 +107,11 @@ ProxyConnection::ProxyConnection(Request *req, int sockfd) {
     this->completed = false;
     this->recbuf = new char[MAX_BUF];
     this->status = PSTATUS_INTERNAL_ERROR;
+    this->cache = nullptr;
+    this->should_cache = false;
+}
+ProxyConnection::ProxyConnection(Request *r, int s, Cache *cache) :
+ProxyConnection::ProxyConnection(r,s) {
+    this->cache = cache;
+    this->should_cache = true;
 }

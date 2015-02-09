@@ -17,6 +17,7 @@
 #include "Socket.h"
 #include "Connection.h"
 #include "Response.h"
+#include "Cache.h"
 
 #define PSTATUS_INTERNAL_ERROR          -1
 #define PSTATUS_OK                      0
@@ -30,9 +31,12 @@ class ProxyConnection : public Connection {
 private:
     char *recbuf;
     int status;
+    Cache *cache;
+    bool should_cache;
 public:
     void print_status() override;
     ProxyConnection(Request *, int);
+    ProxyConnection(Request *, int, Cache *);
     void handle_connection() override;
 };
 

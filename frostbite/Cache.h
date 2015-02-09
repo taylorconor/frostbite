@@ -1,0 +1,42 @@
+//
+//  Cache.h
+//  frostbite
+//
+//  Created by Conor Taylor on 04/02/2015.
+//  Copyright (c) 2015 Frostplant. All rights reserved.
+//
+
+#ifndef __frostbite__Cache__
+#define __frostbite__Cache__
+
+#include <stdio.h>
+#include <string>
+#include <map>
+#include <fstream>
+#include <unordered_map>
+
+struct CacheItem {
+    std::string *addr;
+    time_t expiry;
+};
+
+class Cache {
+private:
+    static Cache *_instance;
+    Cache();
+    
+    std::map<std::string, CacheItem> *cache_map;
+    std::string _directory;
+
+public:
+    static Cache *instance();
+    
+    std::string *lookup(std::string);
+    std::string hash(std::string);
+    std::string directory();
+    void insert(std::string, std::string);
+    
+    void set_directory(std::string);
+};
+
+#endif /* defined(__frostbite__Cache__) */
