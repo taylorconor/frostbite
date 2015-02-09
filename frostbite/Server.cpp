@@ -81,6 +81,23 @@ int Server::parse_config() {
             else {
                 proxy.connections = MAX_PROXY_CONNS;
             }
+            
+            if (document["proxy"].HasMember("cache") &&
+                document["proxy"]["cache"].IsString()) {
+                std::string cache = document["proxy"]["cache"].GetString();
+                if (cache.compare("off") == 0) {
+                    proxy.should_cache = false;
+                }
+                else if (Utils::exists(cache)) {
+                    proxy.should_cache = true;
+                    proxy.cache = cache;
+                }
+                else {
+                    Utils::error("WARNING: Config file: cache location does not"
+                                 " exist or is not writeable");
+                    proxy.should_cache = false;
+                }
+            }
         }
         else {
             proxy.status = PROXY_OFF;
@@ -231,8 +248,12 @@ void Server::init_server() {
         Utils::error("ERROR on binding");
     
     // initialise proxy host
-    if (proxy.status != PROXY_OFF)
-        proxy.host = new ProxyHost(proxy.connections);
+    if (proxy.status != PROXY_OFF) {
+        if (proxy.should_cache)
+            proxy.host = new ProxyHost(proxy.connections, proxy.cache);
+        else
+            proxy.host = new ProxyHost(proxy.connections);
+    }
     
     std::cout << "frostbite server listening on port " << port << std::endl;
     
