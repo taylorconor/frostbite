@@ -21,8 +21,10 @@ an example config file (`.fconfig`) for frostbite configuration is as follows:
 {
   "port": 80,    // TCP port to listen on
   "proxy": {     // optional proxy config (defaults to status=off if not present)
+    // all=proxy all connections, others=proxy all connections not present in hosts
     "status": "others",
-    "connections": 64
+    "connections": 64,                            // max concurrent proxy conns
+    "cache": "/var/www/cache"                     // location to store cache
   },
   "hosts": [      // frostbite supports multiple hosts per server
     {
