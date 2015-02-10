@@ -46,18 +46,21 @@ void ProxyHost::watch_pool() {
                 if (status < 0) {
                     Utils::error("ERROR unable to write to socket " +
                                  std::to_string(item->sockfd()));
+                    file.close();
+                    close(item->sockfd());
+                    delete item;
                     continue;
                 }
             }
-            std::cout << "File served from cache!" << std::endl;
+            item->set_cache_override(true);
             
             file.close();
             delete[] buf;
         }
         else {
             item->handle_connection();
-            item->print_status();
         }
+        item->print_status();
         close(item->sockfd());
         delete item;
     }
