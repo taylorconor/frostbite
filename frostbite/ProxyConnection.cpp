@@ -9,7 +9,12 @@
 #include "ProxyConnection.h"
 
 void ProxyConnection::print_status() {
-    std::string output = "PROXY ";
+    std::string output;
+    if (cache_override)
+        output = "CACHE ";
+    else
+        output = "PROXY ";
+    
     switch (status) {
         case PSTATUS_OK:
             output += "OK\t";
@@ -109,6 +114,7 @@ ProxyConnection::ProxyConnection(Request *req, int sockfd) {
     this->status = PSTATUS_INTERNAL_ERROR;
     this->cache = nullptr;
     this->should_cache = false;
+    this->cache_override = false;
 }
 ProxyConnection::ProxyConnection(Request *r, int s, Cache *cache) :
 ProxyConnection::ProxyConnection(r,s) {

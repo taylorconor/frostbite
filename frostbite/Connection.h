@@ -41,6 +41,7 @@ protected:
     Response *res;
     int _sockfd;
     bool completed;
+    bool cache_override;
     std::string location;
     
 public:
@@ -54,6 +55,7 @@ public:
     bool is_completed();
     int sockfd();
     std::string request_name();
+    void set_cache_override(bool);
     
     virtual void handle_connection();
 };

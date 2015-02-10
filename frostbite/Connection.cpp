@@ -126,6 +126,7 @@ Connection::Connection(Request *req, int sockfd, std::string location) {
     this->req = req;
     this->location = location;
     this->completed = false;
+    this->cache_override = false;
 }
 
 int Connection::sockfd() {
@@ -133,6 +134,10 @@ int Connection::sockfd() {
 }
 bool Connection::is_completed() {
     return completed;
+}
+
+void Connection::set_cache_override(bool override) {
+    this->cache_override = override;
 }
 
 std::string Connection::request_name() {
