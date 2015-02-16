@@ -39,7 +39,11 @@ void ProxyConnection::print_status() {
     output += uri;
     
     mtx->lock();
-    std::cout << output << std::endl;
+    // write output to log file
+    std::ofstream f(cache->console()+"log",
+                    std::ofstream::out | std::ofstream::app);
+    f << output << std::endl;
+    f.close();
     mtx->unlock();
 }
 
