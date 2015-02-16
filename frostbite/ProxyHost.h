@@ -24,7 +24,7 @@ public:
     void handle_request(Request *, int) override;
     
     ProxyHost(int);
-    ProxyHost(int, std::string);
+    ProxyHost(int, std::string, std::string);
 };
 
 #endif /* defined(__frostbite__ProxyHost__) */

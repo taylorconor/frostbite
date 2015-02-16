@@ -27,6 +27,7 @@ private:
     
     std::map<std::string, CacheItem> *cache_map;
     std::string _directory;
+    std::string _console;
 
 public:
     static Cache *instance();
@@ -34,9 +35,11 @@ public:
     std::string *lookup(std::string);
     std::string hash(std::string);
     std::string directory();
+    std::string console();
     void insert(std::string, std::string);
     
     void set_directory(std::string);
+    void set_console(std::string);
 };
 
 #endif /* defined(__frostbite__Cache__) */

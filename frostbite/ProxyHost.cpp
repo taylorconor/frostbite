@@ -78,8 +78,10 @@ ProxyHost::ProxyHost(int threads) {
     }
 }
 
-ProxyHost::ProxyHost(int t, std::string cache) : ProxyHost::ProxyHost(t) {
+ProxyHost::ProxyHost(int t, std::string cache, std::string console) :
+ProxyHost::ProxyHost(t) {
     this->cache = Cache::instance();
     this->cache->set_directory(cache);
+    this->cache->set_console(console);
     this->should_cache = true;
 }

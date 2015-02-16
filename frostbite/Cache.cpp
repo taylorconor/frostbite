@@ -24,14 +24,29 @@ std::string Cache::hash(std::string uri) {
 
 void Cache::insert(std::string uri, std::string hash) {
     (*cache_map)[uri].addr = new std::string(_directory + hash);
+    if (_console.length() > 0) {
+        std::ofstream f(_console+"cache");
+        for (auto items : *cache_map) {
+            f << items.first+"\n";
+        }
+        f.close();
+    }
 }
 
 std::string Cache::directory() {
     return _directory;
 }
 
+std::string Cache::console() {
+    return _console;
+}
+
 void Cache::set_directory(std::string directory) {
     this->_directory = directory;
+}
+
+void Cache::set_console(std::string console) {
+    this->_console = console;
 }
 
 Cache::Cache() {
