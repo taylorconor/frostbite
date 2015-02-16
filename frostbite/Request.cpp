@@ -17,8 +17,8 @@ int Request::parse() {
             // break the request type into its 3 parts
             std::vector<std::string> parts = Utils::explode(line, ' ');
             if (parts.size() == 3) {
-                header["request-method"] = parts[0];
-                header["request-uri"] = parts[1];
+                _header["request-method"] = parts[0];
+                _header["request-uri"] = parts[1];
                 
                 // TODO: implement smart URL parsing
                 /*size_t pos = parts[1].find(':');
@@ -38,7 +38,7 @@ int Request::parse() {
                 _protocol = "http";
                 _port = 80;
                 
-                header["request-http"] = parts[2].substr(0,parts[2].length()-1);
+                _header["request-http"] = parts[2].substr(0,parts[2].length()-1);
             }
         }
         else {
@@ -46,7 +46,7 @@ int Request::parse() {
             if(index != std::string::npos) {
                 std::string i=boost::algorithm::trim_copy(line.substr(0,index));
                 std::string v=boost::algorithm::trim_copy(line.substr(index+1));
-                header[i] = v;
+                _header[i] = v;
                 
                 // keep Host in it's own variable, since it's accessed so often
                 if (i.compare("Host") == 0)
@@ -61,24 +61,25 @@ int Request::parse() {
 Request::Request(std::string r) {
     this->_source = r;
     this->_status = parse();
+    this->_pivot = this->_source.find("\r\n\r\n");
 }
 Request::Request() {}
 
 std::string Request::method() {
-    return header["request-method"];
+    return _header["request-method"];
 }
 
 std::string Request::uri() {
-    return header["request-uri"];
+    return _header["request-uri"];
 }
 
 std::string Request::http_version() {
-    return header["request-http"];
+    return _header["request-http"];
 }
 
 std::string Request::param(std::string param) {
-    if (header.find(param) != header.end())
-        return header.at(param);
+    if (_header.find(param) != _header.end())
+        return _header.at(param);
     else
         return "";
 }
@@ -91,12 +92,20 @@ std::string Request::host() {
     return _host;
 }
 
+std::string Request::header() {
+    return _source.substr(0,_pivot);
+}
+
+std::string Request::body() {
+    return _source.substr(_pivot + 4);
+}
+
 int Request::port() {
     return _port;
 }
 
 void Request::set_param(std::string index, std::string val) {
-    header[index] = val;
+    _header[index] = val;
 }
 
 bool Request::is_valid() {

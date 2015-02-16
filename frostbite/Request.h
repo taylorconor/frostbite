@@ -26,10 +26,11 @@ class Request {
 private:
     int parse();
     
-    std::map<std::string,std::string> header;
+    std::map<std::string,std::string> _header;
     std::string _source;
     std::string _protocol;
     std::string _host;
+    std::size_t _pivot;
     int _status;
     int _port;
     
@@ -44,6 +45,8 @@ public:
     std::string source();
     std::string protocol();
     std::string host();
+    std::string header();
+    std::string body();
     int port();
     void set_param(std::string, std::string);
     bool is_valid();
