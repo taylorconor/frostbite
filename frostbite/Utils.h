@@ -30,6 +30,8 @@ public:
     static std::vector<std::string> explode(std::string const &, char, int);
     
     static bool exists(const std::string&);
+    
+    static std::string time_string(time_t);
 };
 
 #endif /* defined(__frostbite__Utils__) */

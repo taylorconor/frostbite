@@ -75,3 +75,32 @@ bool Utils::exists(const std::string& name) {
     struct stat buffer;
     return (stat (name.c_str(), &buffer) == 0);
 }
+
+std::string Utils::time_string(time_t t) {
+    tm *ltm = localtime(&t);
+    
+    std::string s;
+    if (ltm->tm_hour < 10)
+        s += "0";
+    s += std::to_string(ltm->tm_hour)+":";
+    
+    if (ltm->tm_min < 10)
+        s += "0";
+    s += std::to_string(ltm->tm_min)+":";
+    
+    if (ltm->tm_sec < 10)
+        s += "0";
+    s += std::to_string(ltm->tm_sec)+" ";
+    
+    if (ltm->tm_mday < 10)
+        s += "0";
+    s += std::to_string(ltm->tm_mday)+"/";
+    
+    if (ltm->tm_mon < 10)
+        s += "0";
+    s += std::to_string(ltm->tm_mon)+"/";
+    
+    s += std::to_string(ltm->tm_year+1900);
+    
+    return s;
+}
