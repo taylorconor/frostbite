@@ -24,7 +24,7 @@ public:
     static std::string dump_map(const std::map<std::string,
                                      std::string>& map);
     
-    static std::string& trim(std::string &, const std::string &);
+    static std::string& trim(std::string &);
     
     static std::vector<std::string> explode(std::string const &, char);
     static std::vector<std::string> explode(std::string const &, char, int);

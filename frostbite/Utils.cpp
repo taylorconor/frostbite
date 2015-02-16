@@ -31,9 +31,8 @@ std::string& trim_left_inplace(std::string& s,
     return s.erase(0, s.find_first_not_of(delimiters));
 }
 
-std::string& Utils::trim(std::string& s,
-                          const std::string& delimiters = " \f\n\r\t\v") {
-    return trim_left_inplace(trim_right_inplace(s, delimiters), delimiters);
+std::string& Utils::trim(std::string& s) {
+    return trim_left_inplace(trim_right_inplace(s, " \f\n\r\t\v"), " \f\n\r\t\v");
 }
 
 std::vector<std::string> Utils::explode(std::string const &s, char delim) {
