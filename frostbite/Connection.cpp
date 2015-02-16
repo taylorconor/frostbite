@@ -100,12 +100,12 @@ void Connection::handle_connection() {
     std::string method = req->method();
     
     // TODO: implement other HTTP methods
-    if (method.compare("GET") == 0) {
-        res = new Response(uri, _sockfd);
+    if (method.compare("GET") == 0 || method.compare("POST") == 0) {
+        res = new Response(uri, req, _sockfd);
         res->send(u->status);
     }
     else {
-        res = new Response(_sockfd);
+        res = new Response(req, _sockfd);
         res->send(HTTP_405_METHOD_NOT_ALLOWED);
         delete uri;
         return;

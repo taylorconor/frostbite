@@ -25,17 +25,56 @@ int Response::write_file() {
     }
     else if (uri->clean_ext() == ".php") {
         const char *h = ("HTTP/1.1 200 OK\n" +
-                         Utils::dump_map(header)+"\n").c_str();
+                         Utils::dump_map(header)).c_str();
         if (write(this->sockfd, h, strlen(h)) < 0) {
             Utils::error("ERROR unable to write to socket " +
                          std::to_string(sockfd));
             return HTTP_500_INTERNAL_ERR;
         }
         
-        // make sure to execute the php script from its own parent directory,
-        // for filesystem reference reasons
-        std::string cmd = "cd "+uri->parent_dir()+" && php "+uri->src();
+        /*std::string cmd;
+        cmd =   "export REDIRECT_STATUS=CGI\n"
+                "export GATEWAY_INTERFACE=\"CGI/1.1\"\n"
+                "export SCRIPT_FILENAME="+uri->src()+"\n"
+                "export REQUEST_METHOD=\""+req->method()+"\"\n"
+                "export SERVER_NAME=\""+req->host()+"\"\n"
+                "export SERVER_PROTOCOL=\"HTTP/1.1\"\n"
+                "export REQUEST_URI=\""+req->uri()+"\"\n";
+                //"export HTTP_HOST="+req->host()+"\n"
+                //"export CONTENT_TYPE=application/x-www-form-urlencoded\n";
         
+        if (req->method().compare("POST") == 0) {
+            cmd +=  "export QUERY_STRING=\""+req->body()+"\"\n"
+                    "export BODY=\""+req->body()+"\"\n"
+                    "export CONTENT_LENGTH="+
+                    std::to_string(req->body().length())+"\n";
+        }*/
+        
+        std::string cmd;
+        if (req->method().compare("POST") == 0) {
+            cmd =   "echo \""+req->body()+"\" | "
+                    "REDIRECT_STATUS=CGI "
+                    "REQUEST_METHOD=POST "
+                    "SCRIPT_FILENAME="+uri->src()+" "
+                    //"SCRIPT_NAME=/writer.php "
+                    //"PATH_INFO=/ "
+                    //"SERVER_NAME=localhost:1234 "
+                    //"SERVER_PROTOCOL=HTTP/1.1 "
+                    //"REQUEST_URI=/example/index.html "
+                    //"HTTP_HOST=example.com "
+                    "CONTENT_TYPE=application/x-www-form-urlencoded "
+                    "CONTENT_LENGTH="+std::to_string(req->body().length())+" "
+                    "php-cgi";
+        }
+        else {
+            // make sure to execute the php script from its own parent directory
+            // for filesystem reference reasons
+            cmd +=  "cd "+uri->parent_dir()+" && php-cgi "+uri->src();
+                    //" && php-cgi";
+                    //" && echo \""+req->body()+"\" | php-cgi";
+        }
+
+        std::cout << cmd << std::endl;
         char *buf = new char[MAX_BUF];
         FILE *fp = popen(cmd.c_str(), "r");
         if (!fp) {
@@ -134,20 +173,17 @@ void Response::send(int code) {
 }
 
 Response::Response() {}
-Response::Response(int sockfd) {
+Response::Response(Request *req, int sockfd) {
     this->sockfd = sockfd;
+    this->req = req;
     
     header["Server"] = "frostbite";
     header["Accept-Ranges"] = "bytes";
     header["Connection"] = "Keep-Alive";
 }
-Response::Response(URI *uri, int sockfd) {
+Response::Response(URI *uri, Request *req, int sockfd) :
+Response::Response(req, sockfd) {
     this->uri = uri;
-    this->sockfd = sockfd;
-    
-    header["Server"] = "frostbite";
-    header["Accept-Ranges"] = "bytes";
-    header["Connection"] = "Keep-Alive";
 }
 
 int Response::code() {

@@ -48,6 +48,7 @@ private:
     int write_file();
     std::string title(int);
     
+    Request *req;
     std::map<std::string,std::string> header;
     int sockfd;
     int _code;
@@ -55,8 +56,8 @@ private:
 
 public:
     Response();
-    Response(int);
-    Response(URI *, int);
+    Response(Request *, int);
+    Response(URI *, Request *, int);
     int code();
     void send();
     void send(int);

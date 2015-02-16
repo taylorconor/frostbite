@@ -20,7 +20,7 @@
 #include "Response.h"
 #include "URI.h"
 
-#define ERR_RESPONSE    this->res = new Response(_sockfd); \
+#define ERR_RESPONSE    this->res = new Response(req, _sockfd); \
                         this->res->send(HTTP_500_INTERNAL_ERR); \
 
 class abs_uri {
