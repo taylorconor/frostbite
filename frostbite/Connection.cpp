@@ -143,3 +143,7 @@ void Connection::set_cache_override(bool override) {
 std::string Connection::request_name() {
     return req->uri();
 }
+
+std::string Connection::request_host() {
+    return req->host();
+}

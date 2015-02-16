@@ -55,7 +55,8 @@ public:
     bool is_completed();
     int sockfd();
     std::string request_name();
-    void set_cache_override(bool);
+    std::string request_host();
+    virtual void set_cache_override(bool);
     
     virtual void handle_connection();
 };
