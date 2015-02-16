@@ -98,6 +98,19 @@ int Server::parse_config() {
                     proxy.should_cache = false;
                 }
             }
+            
+            if (document["proxy"].HasMember("console") &&
+                document["proxy"]["console"].IsString()) {
+                std::string console = document["proxy"]["console"].GetString();
+                if (Utils::exists(console)) {
+                    proxy.console = console;
+                }
+                else {
+                    Utils::error("WARNING: Proxy console: location does not "
+                                 "exist or is not writeable");
+                    proxy.console = nullptr;
+                }
+            }
         }
         else {
             proxy.status = PROXY_OFF;
@@ -250,7 +263,8 @@ void Server::init_server() {
     // initialise proxy host
     if (proxy.status != PROXY_OFF) {
         if (proxy.should_cache)
-            proxy.host = new ProxyHost(proxy.connections, proxy.cache);
+            proxy.host = new ProxyHost(proxy.connections,
+                                       proxy.cache, proxy.console);
         else
             proxy.host = new ProxyHost(proxy.connections);
     }

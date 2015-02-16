@@ -46,6 +46,7 @@ struct proxyStatus {
     int connections;
     std::string cache;
     bool should_cache;
+    std::string console;
     Host *host;
 };
 
