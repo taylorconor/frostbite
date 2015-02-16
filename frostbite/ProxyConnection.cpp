@@ -53,7 +53,8 @@ void ProxyConnection::handle_connection() {
         return;
     }
     
-    if (req->method().compare("GET") == 0) {
+    // ignore connect requests
+    if (req->method().compare("CONNECT") != 0) {
         int proxy_sockfd = Socket::create(req->host(), req->port());
         if (proxy_sockfd != -1) {
             ssize_t n, m;
@@ -73,6 +74,7 @@ void ProxyConnection::handle_connection() {
                 std::string hash = cache->hash(req->uri());
                 std::ofstream file;
                 file.open(cache->directory() + hash);
+                char *loc, *cache_header = nullptr;
                 
                 while ((n = recv(proxy_sockfd, recbuf, MAX_BUF, 0)) > 0) {
                     m = send(_sockfd, recbuf, n, 0);
@@ -81,10 +83,17 @@ void ProxyConnection::handle_connection() {
                         break;
                     }
                     file.write(recbuf, n);
+                    if ((loc = strstr(recbuf, "Cache-Control: ")) != NULL) {
+                        loc += 15; // remove "Cache-Control" part
+                        cache_header = strndup(loc, strstr(loc, "\r\n")-loc);
+                    }
                 }
                 
                 file.close();
-                cache->insert(req->uri(), hash);
+                std::string s = "";
+                if (cache_header)
+                    s = std::string(cache_header);
+                cache->insert(req->uri(), hash, s);
             }
             else {
                 while ((n = recv(proxy_sockfd, recbuf, MAX_BUF, 0)) > 0) {
@@ -107,6 +116,11 @@ void ProxyConnection::handle_connection() {
     }
     
     this->completed = true;
+}
+
+void ProxyConnection::set_cache_override(bool override) {
+    this->cache_override = override;
+    this->status = PSTATUS_OK;
 }
 
 ProxyConnection::ProxyConnection(Request *req, int sockfd) {

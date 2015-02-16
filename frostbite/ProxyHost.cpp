@@ -34,7 +34,11 @@ void ProxyHost::watch_pool() {
         lck.unlock();
         
         std::string *src;
-        if ((src = cache->lookup(item->request_name())) != NULL) {
+        if (std::find(blocklist.begin(), blocklist.end(), item->request_host())
+            != blocklist.end()) {
+            std::cout << "BLOCKED: " << item->request_host() << std::endl;
+        }
+        else if ((src = cache->lookup(item->request_name())) != NULL) {
             std::ifstream file;
             file.open(*src);
             
@@ -66,6 +70,34 @@ void ProxyHost::watch_pool() {
     }
 }
 
+void ProxyHost::watch_blocklist() {
+    while (should_watch) {
+        std::ifstream file(cache->console()+"blocklist");
+        unsigned long n = std::count(std::istreambuf_iterator<char>(file),
+                                     std::istreambuf_iterator<char>(), '\n');
+        
+        file.clear();
+        file.seekg(0, std::ios::beg);
+        
+        if (n > blocklist.size()) {
+            std::string s;
+            unsigned long prev = blocklist.size();
+            
+            for (unsigned long i = 0; i < n; i++) {
+                std::getline(file, s);
+                
+                // skip n lines
+                if (i >= prev)
+                    blocklist.push_back(s);
+            }
+        }
+        
+        file.close();
+        
+        sleep(1);
+    }
+}
+
 ProxyHost::ProxyHost(int threads) {
     this->threads = threads;
     this->should_watch = true;
@@ -83,5 +115,9 @@ ProxyHost::ProxyHost(t) {
     this->cache = Cache::instance();
     this->cache->set_directory(cache);
     this->cache->set_console(console);
+    // now delete all previously cached items from the console directory
+    system(("exec rm -r "+console+"*").c_str());
     this->should_cache = true;
+    this->thread_pool.push_back(new std::thread(&ProxyHost::watch_blocklist,
+                                                this));
 }

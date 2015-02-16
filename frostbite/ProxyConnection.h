@@ -38,6 +38,7 @@ public:
     ProxyConnection(Request *, int);
     ProxyConnection(Request *, int, Cache *);
     void handle_connection() override;
+    void set_cache_override(bool) override;
 };
 
 #endif /* defined(__frostbite__ProxyConnection__) */

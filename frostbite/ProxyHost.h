@@ -10,6 +10,7 @@
 #define __frostbite__ProxyHost__
 
 #include <stdio.h>
+#include <vector>
 
 #include "Host.h"
 #include "ProxyConnection.h"
@@ -19,7 +20,10 @@ class ProxyHost : public Host {
 private:
     bool should_cache;
     Cache *cache;
+    std::vector<std::string> blocklist;
+    
     void watch_pool();
+    void watch_blocklist();
 public:
     void handle_request(Request *, int) override;
     

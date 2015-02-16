@@ -97,12 +97,15 @@ int Response::write_file() {
     }
     else {
         // expecting a 200 success unless the socket fails while writing
-        const char *h = ("HTTP/1.1 200 OK\n" +
-                         Utils::dump_map(this->header) + "\n").c_str();
-        if (write(this->sockfd, h, strlen(h)) < 0) {
-            Utils::error("ERROR unable to write to socket " +
-                         std::to_string(sockfd));
-            return HTTP_500_INTERNAL_ERR;
+        std::string exclude = "http://localhost:1234/admin/cache";
+        if (req->uri().substr(0,exclude.length()).compare(exclude) != 0) {
+            const char *h = ("HTTP/1.1 200 OK\n" +
+                             Utils::dump_map(this->header) + "\n").c_str();
+            if (write(this->sockfd, h, strlen(h)) < 0) {
+                Utils::error("ERROR unable to write to socket " +
+                             std::to_string(sockfd));
+                return HTTP_500_INTERNAL_ERR;
+            }
         }
         
         char *buf = new char[MAX_BUF];
