@@ -14,9 +14,14 @@
 #include <map>
 #include <fstream>
 #include <unordered_map>
+#include <regex>
+
+#include "Utils.h"
 
 struct CacheItem {
     std::string *addr;
+    std::string hash;
+    time_t created;
     time_t expiry;
 };
 
@@ -36,7 +41,7 @@ public:
     std::string hash(std::string);
     std::string directory();
     std::string console();
-    void insert(std::string, std::string);
+    void insert(std::string, std::string, std::string);
     
     void set_directory(std::string);
     void set_console(std::string);
