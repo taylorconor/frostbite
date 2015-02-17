@@ -32,36 +32,12 @@ int Response::write_file() {
             return HTTP_500_INTERNAL_ERR;
         }
         
-        /*std::string cmd;
-        cmd =   "export REDIRECT_STATUS=CGI\n"
-                "export GATEWAY_INTERFACE=\"CGI/1.1\"\n"
-                "export SCRIPT_FILENAME="+uri->src()+"\n"
-                "export REQUEST_METHOD=\""+req->method()+"\"\n"
-                "export SERVER_NAME=\""+req->host()+"\"\n"
-                "export SERVER_PROTOCOL=\"HTTP/1.1\"\n"
-                "export REQUEST_URI=\""+req->uri()+"\"\n";
-                //"export HTTP_HOST="+req->host()+"\n"
-                //"export CONTENT_TYPE=application/x-www-form-urlencoded\n";
-        
-        if (req->method().compare("POST") == 0) {
-            cmd +=  "export QUERY_STRING=\""+req->body()+"\"\n"
-                    "export BODY=\""+req->body()+"\"\n"
-                    "export CONTENT_LENGTH="+
-                    std::to_string(req->body().length())+"\n";
-        }*/
-        
         std::string cmd;
         if (req->method().compare("POST") == 0) {
             cmd =   "echo \""+req->body()+"\" | "
                     "REDIRECT_STATUS=CGI "
                     "REQUEST_METHOD=POST "
                     "SCRIPT_FILENAME="+uri->src()+" "
-                    //"SCRIPT_NAME=/writer.php "
-                    //"PATH_INFO=/ "
-                    //"SERVER_NAME=localhost:1234 "
-                    //"SERVER_PROTOCOL=HTTP/1.1 "
-                    //"REQUEST_URI=/example/index.html "
-                    //"HTTP_HOST=example.com "
                     "CONTENT_TYPE=application/x-www-form-urlencoded "
                     "CONTENT_LENGTH="+std::to_string(req->body().length())+" "
                     "php-cgi";
@@ -70,8 +46,6 @@ int Response::write_file() {
             // make sure to execute the php script from its own parent directory
             // for filesystem reference reasons
             cmd +=  "cd "+uri->parent_dir()+" && php-cgi "+uri->src();
-                    //" && php-cgi";
-                    //" && echo \""+req->body()+"\" | php-cgi";
         }
 
         std::cout << cmd << std::endl;
