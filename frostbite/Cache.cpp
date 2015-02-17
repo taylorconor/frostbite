@@ -13,7 +13,7 @@ Cache *Cache::_instance = nullptr;
 std::string *Cache::lookup(std::string uri) {
     if (cache_map->find(uri) != cache_map->end()) {
         // check if cache has expired. if it has, clean up and return null
-        if ((*cache_map)[uri].expiry < time(0)) {
+        if ((*cache_map)[uri].expiry > 0 &&(*cache_map)[uri].expiry < time(0)) {
             remove((*cache_map)[uri].addr->c_str());
             delete (*cache_map)[uri].addr;
             cache_map->erase(uri);
